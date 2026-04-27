@@ -156,7 +156,7 @@
     "step": {
       "auth_mode_web": {
         "title": "Authentication Mode - Web",
-        "description": "Retrieve your token from https://cloud-universe.anycubic.com/file following the steps in the readme.",
+        "description": "Retrieve your token following the steps in the readme (see documentation).",
         "data": {
           "user_token": "[%key:common::user_token%]"
         }
