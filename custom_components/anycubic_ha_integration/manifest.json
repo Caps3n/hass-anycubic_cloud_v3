@@ -15,7 +15,7 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/Caps3n/hass-anycubic_cloud_v3/issues",
   "loggers": [
-    "custom_components.anycubic_ha_integration"
+    "anycubic_ha_integration"
   ],
   "requirements": [
     "paho-mqtt>=2.0.0,<3"
