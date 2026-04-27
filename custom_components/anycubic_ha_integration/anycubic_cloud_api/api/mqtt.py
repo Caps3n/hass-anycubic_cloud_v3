@@ -254,7 +254,7 @@ class AnycubicMQTTAPI(AnycubicAPIFunctions):
         userdata: Any,
         mid: int,
         granted_qos: tuple[int],
-        properties=None,  # <-- neu für paho 2.x; stört 1.x nicht
+        properties: Any = None,  # <-- neu für paho 2.x; stört 1.x nicht
     ) -> None:
         if self._mqtt_connected is not None:
             self._mqtt_connected.set()
@@ -293,7 +293,7 @@ class AnycubicMQTTAPI(AnycubicAPIFunctions):
         userdata: Any,
         flags: dict[str, Any],
         rc: int,
-        properties=None,  # <-- neu für paho 2.x; stört 1.x nicht
+        properties: Any = None,  # <-- neu für paho 2.x; stört 1.x nicht
     ) -> None:
         if rc == 0:
             if self._mqtt_connected is None:
@@ -338,15 +338,15 @@ class AnycubicMQTTAPI(AnycubicAPIFunctions):
         # paho-mqtt 2.x benötigt callback_api_version=VERSION1; 1.x kennt den Parameter nicht.
         try:
             self._mqtt_client = mqtt_client.Client(
-                client_id=self._client_id,
+                client_id=self.anycubic_auth.get_mqtt_client_id(),
                 protocol=mqtt_client.MQTTv311,
-                callback_api_version=mqtt_client.CallbackAPIVersion.VERSION1,  # type: ignore[attr-defined]
+                callback_api_version=mqtt_client.CallbackAPIVersion.VERSION1,
                 userdata=self,  # falls bei dir schon userdata genutzt wird, so lassen
             )
         except TypeError:
             # Fallback für paho-mqtt 1.x (kennt callback_api_version nicht)
             self._mqtt_client = mqtt_client.Client(
-                client_id=self._client_id,
+                client_id=self.anycubic_auth.get_mqtt_client_id(),
                 protocol=mqtt_client.MQTTv311,
                 userdata=self,
             )
