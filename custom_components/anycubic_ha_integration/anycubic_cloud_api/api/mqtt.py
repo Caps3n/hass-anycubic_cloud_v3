@@ -340,7 +340,7 @@ class AnycubicMQTTAPI(AnycubicAPIFunctions):
             self._mqtt_client = mqtt_client.Client(
                 client_id=self._client_id,
                 protocol=mqtt_client.MQTTv311,
-                callback_api_version=mqtt_client.CallbackAPIVersion.VERSION1,
+                callback_api_version=mqtt_client.CallbackAPIVersion.VERSION1,  # type: ignore[attr-defined]
                 userdata=self,  # falls bei dir schon userdata genutzt wird, so lassen
             )
         except TypeError:
