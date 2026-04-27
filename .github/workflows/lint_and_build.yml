@@ -21,12 +21,9 @@ jobs:
         with:
           path: "custom_components"
       - name: Run mypy
-        uses: jpetrucciani/mypy-check@master
-        with:
-          path: './custom_components'
-          mypy_flags: '--config-file=mypy.ini'
-          requirements_file: requirements.txt
-          python_version: "3.13"
+        run: |
+          pip install mypy -r requirements.txt
+          mypy --config-file=mypy.ini ./custom_components
       - name: Run isort
         uses: isort/isort-action@v1
         with:
