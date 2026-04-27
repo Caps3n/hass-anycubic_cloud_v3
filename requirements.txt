@@ -1,0 +1,5 @@
+aiofiles==24.1.0
+homeassistant==2025.11.0
+pydantic==2.9.2
+types-aiofiles==24.1.0.20240626
+types-paho-mqtt==2.0.0

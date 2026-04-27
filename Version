@@ -1,0 +1,7 @@
+Version: 0.0.1  20251011 - Initial Release (ljschmitt fork)
+Version: 0.0.2  20251010 - Various updates + frontend
+Version: 0.0.3  20251010 - Deutsche Übersetzung im Backend
+Version: 0.0.4  20251010 - Fehlerkorrektur service.yaml
+...
+Version: 0.0.61 20251011 - paho-mqtt 2.x Support, MQTT-Fallback, Bugfixes (ljschmitt)
+Version: 0.0.62 20260427 - Fork by Caps3n: GitHub Actions v4, loggers-Fix, HA 2025.11+ Kompatibilitaet
