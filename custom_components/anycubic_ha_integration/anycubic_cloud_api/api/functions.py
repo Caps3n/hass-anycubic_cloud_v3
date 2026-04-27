@@ -852,6 +852,17 @@ class AnycubicAPIFunctions(AnycubicAPIBase):
         )
         return token
 
+    async def request_camera_token_raw(
+        self,
+        printer: AnycubicPrinter,
+    ) -> dict[str, Any] | None:
+        """Request camera token and return the full raw API response for debugging."""
+        result = await self._send_anycubic_camera_open_order(printer, raw_data=True)
+        if isinstance(result, dict):
+            self._log_to_debug(f"Anycubic camera open raw response: {json.dumps(result)}")
+            return result
+        return None
+
     async def _send_order_multi_color_box_get_info(
         self,
         printer: AnycubicPrinter,

@@ -882,6 +882,16 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     async def refresh_cloud_files(self) -> None:
         self._cloud_file_list = await self.anycubic_api.get_user_cloud_files_data_object()
 
+    async def async_request_camera_token(
+        self,
+        printer_id: int,
+    ) -> dict[str, Any] | None:
+        """Request a camera token for the given printer. Returns raw API response."""
+        printer = self.get_printer_for_id(printer_id)
+        if printer is None:
+            return None
+        return await self.anycubic_api.request_camera_token_raw(printer)
+
     async def force_state_update(self) -> None:
         self._last_state_update = None
         await self.async_refresh()

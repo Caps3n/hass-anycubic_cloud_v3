@@ -190,6 +190,11 @@
         "name": "Refresh MQTT Connection"
       }
     },
+    "camera": {
+      "printer_camera": {
+        "name": "Camera"
+      }
+    },
     "image": {
       "job_image_url": {
         "name": "Job Preview"
