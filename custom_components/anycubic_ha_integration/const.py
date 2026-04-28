@@ -17,6 +17,8 @@ INTEGRATION_FOLDER = DOMAIN
 PANEL_FOLDER = "frontend_panel"
 PANEL_FILENAME = "dist/anycubic-cloud-panel.js"
 PANEL_NAME = "anycubic-cloud-panel"
+CARD_FILENAME = "dist/anycubic-card.js"
+CARD_URL = "/anycubic-card-static"
 PANEL_TITLE = "Anycubic Cloud"
 PANEL_ICON = "mdi:printer-3d"
 

@@ -61,7 +61,15 @@ Du hast andere Modelle? Bitte Rückmeldung geben 🙏
 
 ## 🎨 Frontend-Card
 
-Diese Integration ergänzt die [Anycubic-Karte für Home Assistant](https://github.com/WaresWichall/hass-anycubic_card).
+Die Lovelace-Karte (`anycubic-printercard`) ist **direkt in dieser Integration enthalten** und wird beim HA-Start automatisch als Ressource registriert.
+
+> ⚠️ **`WaresWichall/hass-anycubic_card` NICHT separat installieren!**  
+> Das separate HACS-Plugin wird nicht mehr benötigt und kann zu Konflikten führen.  
+> Falls es noch installiert ist: in HACS entfernen → HA neu starten → Browser-Cache leeren (`Cmd+Shift+R`).
+
+Falls die automatische Registrierung nicht funktioniert, manuell hinzufügen unter **Einstellungen → Dashboards → Ressourcen**:
+- **URL:** `/anycubic-card-static`
+- **Typ:** `JavaScript-Modul`
 
 ---
 
