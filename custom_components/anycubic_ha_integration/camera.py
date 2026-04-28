@@ -312,7 +312,7 @@ class AnycubicCloudCamera(AnycubicCloudEntity, Camera):
         response_body: dict[str, Any] = resp.get("Response", {})
         # Try common field names for HLS stream URLs
         for key in ("HlsUrl", "PlayUrl", "LiveUrl", "Url"):
-            url = response_body.get(key)
+            url: str | None = response_body.get(key)
             if url and isinstance(url, str):
                 return url
 
