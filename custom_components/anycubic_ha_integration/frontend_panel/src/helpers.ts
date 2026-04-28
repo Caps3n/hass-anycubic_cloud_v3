@@ -34,31 +34,32 @@ const stylePxKeys = ["width", "height", "left", "top"];
 // entity IDs from translated names (e.g. German HA).
 const _SUFFIX_TO_TK: Record<string, string> = {
   // sensor — English name slugs differ from translation_key
-  "nozzle_temperature": "curr_nozzle_temp",
-  "hotbed_temperature": "curr_hotbed_temp",
-  "target_nozzle_temperature": "target_nozzle_temp",
-  "target_hotbed_temperature": "target_hotbed_temp",
-  "fan_speed": "fan_speed_pct",
-  "print_speed": "print_speed_pct",
-  "drying_target_temperature": "dry_status_target_temperature",
-  "drying_total_duration": "dry_status_total_duration",
-  "drying_remaining_time": "dry_status_remaining_time",
-  "secondary_drying_target_temperature": "secondary_dry_status_target_temperature",
-  "secondary_drying_total_duration": "secondary_dry_status_total_duration",
-  "secondary_drying_remaining_time": "secondary_dry_status_remaining_time",
+  nozzle_temperature: "curr_nozzle_temp",
+  hotbed_temperature: "curr_hotbed_temp",
+  target_nozzle_temperature: "target_nozzle_temp",
+  target_hotbed_temperature: "target_hotbed_temp",
+  fan_speed: "fan_speed_pct",
+  print_speed: "print_speed_pct",
+  drying_target_temperature: "dry_status_target_temperature",
+  drying_total_duration: "dry_status_total_duration",
+  drying_remaining_time: "dry_status_remaining_time",
+  secondary_drying_target_temperature:
+    "secondary_dry_status_target_temperature",
+  secondary_drying_total_duration: "secondary_dry_status_total_duration",
+  secondary_drying_remaining_time: "secondary_dry_status_remaining_time",
   // binary_sensor
-  "drying_active": "dry_status_is_drying",
-  "secondary_drying_active": "secondary_dry_status_is_drying",
-  "job_paused": "job_is_paused",
+  drying_active: "dry_status_is_drying",
+  secondary_drying_active: "secondary_dry_status_is_drying",
+  job_paused: "job_is_paused",
   // update
-  "printer_firmware": "fw_version",
-  "ace_firmware": "multi_color_box_fw_version",
-  "secondary_ace_firmware": "secondary_multi_color_box_fw_version",
+  printer_firmware: "fw_version",
+  ace_firmware: "multi_color_box_fw_version",
+  secondary_ace_firmware: "secondary_multi_color_box_fw_version",
   // image
-  "job_preview": "job_image_url",
+  job_preview: "job_image_url",
   // switch
-  "ace_run_out_refill": "multi_color_box_runout_refill",
-  "secondary_ace_run_out_refill": "secondary_multi_color_box_runout_refill",
+  ace_run_out_refill: "multi_color_box_runout_refill",
+  secondary_ace_run_out_refill: "secondary_multi_color_box_runout_refill",
 };
 
 // Returns true when ent.translation_key matches the panel's match_suffix,
@@ -68,7 +69,9 @@ function _matchesByTranslationKey(
   match_suffix: string,
 ): boolean {
   const tk = ent.translation_key;
-  if (tk === undefined) return false;
+  if (tk === undefined) {
+    return false;
+  }
   return tk === match_suffix || _SUFFIX_TO_TK[match_suffix] === tk;
 }
 
@@ -211,7 +214,10 @@ export function getMatchingEntity(
   for (const key in entities) {
     const ent = entities[key];
     const domain: string = key.split(".")[0];
-    if (domain === match_domain && _matchesByTranslationKey(ent, match_suffix)) {
+    if (
+      domain === match_domain &&
+      _matchesByTranslationKey(ent, match_suffix)
+    ) {
       return ent;
     }
   }
@@ -247,7 +253,10 @@ export function getStrictMatchingEntity(
   for (const key in entities) {
     const ent = entities[key];
     const domain: string = key.split(".")[0];
-    if (domain === match_domain && _matchesByTranslationKey(ent, match_suffix)) {
+    if (
+      domain === match_domain &&
+      _matchesByTranslationKey(ent, match_suffix)
+    ) {
       return ent;
     }
   }
@@ -275,16 +284,20 @@ export function getPrinterEntityIdPart(
   // to the last underscore boundary. All entities share the HA device name slug
   // as their prefix regardless of HA language — only the suffix is translated.
   const entityIdParts: string[] = Object.keys(entities)
-    .map(k => k.split(".")[1])
+    .map((k) => k.split(".")[1])
     .filter(Boolean);
 
   if (entityIdParts.length >= 2) {
     let common = entityIdParts[0];
     for (const part of entityIdParts.slice(1)) {
       let i = 0;
-      while (i < common.length && i < part.length && common[i] === part[i]) i++;
+      while (i < common.length && i < part.length && common[i] === part[i]) {
+        i++;
+      }
       common = common.slice(0, i);
-      if (!common) break;
+      if (!common) {
+        break;
+      }
     }
     const lastUnderscore = common.lastIndexOf("_");
     if (lastUnderscore > 0) {
