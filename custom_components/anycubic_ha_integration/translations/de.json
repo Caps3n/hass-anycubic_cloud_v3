@@ -190,6 +190,11 @@
         "name": "MQTT‑Verbindung aktualisieren"
       }
     },
+    "camera": {
+      "printer_camera": {
+        "name": "Kamera"
+      }
+    },
     "image": {
       "job_image_url": {
         "name": "Auftragsvorschau"

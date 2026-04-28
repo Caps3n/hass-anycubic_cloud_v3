@@ -6,6 +6,7 @@
   ],
   "config_flow": true,
   "dependencies": [
+    "camera",
     "file_upload",
     "http",
     "image",
@@ -20,5 +21,5 @@
   "requirements": [
     "paho-mqtt>=2.0.0,<3"
   ],
-  "version": "0.0.62"
+  "version": "0.0.63"
 }
