@@ -225,8 +225,26 @@ class AnycubicCloudCamera(AnycubicCloudEntity, Camera):
         if self._raw_token is None:
             return None
         try:
-            data: dict[str, Any] = self._raw_token.get("data", {})
-            token_block: dict[str, Any] = data.get("token", {})
+            LOGGER.debug(
+                "Anycubic camera raw token for printer %s: %s",
+                self._printer_id,
+                json.dumps(self._raw_token),
+            )
+            # Use `or {}` so that an explicit null in the response doesn't crash .get()
+            raw_data = self._raw_token.get("data")
+            if not isinstance(raw_data, dict):
+                LOGGER.warning(
+                    "Anycubic camera: token response for printer %s has no valid 'data' "
+                    "block (got %s). The printer may not support camera streaming or the "
+                    "camera token API returned an error. Full response: %s",
+                    self._printer_id,
+                    type(raw_data).__name__,
+                    json.dumps(self._raw_token),
+                )
+                return None
+            data: dict[str, Any] = raw_data
+            token_block_raw = data.get("token")
+            token_block: dict[str, Any] = token_block_raw if isinstance(token_block_raw, dict) else {}
             secret_id: str = token_block.get("tmpSecretId", "")
             secret_key: str = token_block.get("tmpSecretKey", "")
             session_token: str = token_block.get("sessionToken", "")
@@ -244,9 +262,10 @@ class AnycubicCloudCamera(AnycubicCloudEntity, Camera):
             if not all([secret_id, secret_key, session_token, device_tid]):
                 LOGGER.warning(
                     "Anycubic camera: incomplete credentials for printer %s "
-                    "(missing fields). Raw data keys: %s",
+                    "(missing fields). Raw data keys: %s, token keys: %s",
                     self._printer_id,
                     list(data.keys()),
+                    list(token_block.keys()),
                 )
                 return None
             return secret_id, secret_key, session_token, region, device_tid
