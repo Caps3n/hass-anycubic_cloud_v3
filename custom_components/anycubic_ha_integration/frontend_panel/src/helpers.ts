@@ -28,6 +28,50 @@ import {
 
 const stylePxKeys = ["width", "height", "left", "top"];
 
+// Maps the English entity-name slug used by this panel as match_suffix
+// to the Python translation_key, for cases where they differ.
+// This table enables language-agnostic entity lookup even when HA generates
+// entity IDs from translated names (e.g. German HA).
+const _SUFFIX_TO_TK: Record<string, string> = {
+  // sensor — English name slugs differ from translation_key
+  "nozzle_temperature": "curr_nozzle_temp",
+  "hotbed_temperature": "curr_hotbed_temp",
+  "target_nozzle_temperature": "target_nozzle_temp",
+  "target_hotbed_temperature": "target_hotbed_temp",
+  "fan_speed": "fan_speed_pct",
+  "print_speed": "print_speed_pct",
+  "drying_target_temperature": "dry_status_target_temperature",
+  "drying_total_duration": "dry_status_total_duration",
+  "drying_remaining_time": "dry_status_remaining_time",
+  "secondary_drying_target_temperature": "secondary_dry_status_target_temperature",
+  "secondary_drying_total_duration": "secondary_dry_status_total_duration",
+  "secondary_drying_remaining_time": "secondary_dry_status_remaining_time",
+  // binary_sensor
+  "drying_active": "dry_status_is_drying",
+  "secondary_drying_active": "secondary_dry_status_is_drying",
+  "job_paused": "job_is_paused",
+  // update
+  "printer_firmware": "fw_version",
+  "ace_firmware": "multi_color_box_fw_version",
+  "secondary_ace_firmware": "secondary_multi_color_box_fw_version",
+  // image
+  "job_preview": "job_image_url",
+  // switch
+  "ace_run_out_refill": "multi_color_box_runout_refill",
+  "secondary_ace_run_out_refill": "secondary_multi_color_box_runout_refill",
+};
+
+// Returns true when ent.translation_key matches the panel's match_suffix,
+// either directly or via the _SUFFIX_TO_TK reverse lookup.
+function _matchesByTranslationKey(
+  ent: HassEntityInfo,
+  match_suffix: string,
+): boolean {
+  const tk = ent.translation_key;
+  if (tk === undefined) return false;
+  return tk === match_suffix || _SUFFIX_TO_TK[match_suffix] === tk;
+}
+
 export function updateElementStyleWithObject(
   el: HTMLElement | undefined,
   updateObj: any, // eslint-disable-line
@@ -163,12 +207,20 @@ export function getMatchingEntity(
   match_domain: string,
   match_suffix: string,
 ): HassEntityInfo | undefined {
+  // Primary: match by translation_key (language-independent)
+  for (const key in entities) {
+    const ent = entities[key];
+    const domain: string = key.split(".")[0];
+    if (domain === match_domain && _matchesByTranslationKey(ent, match_suffix)) {
+      return ent;
+    }
+  }
+  // Fallback: entity_id endsWith matching (English HA or no translation_key)
   for (const key in entities) {
     const ent = entities[key];
     const splitID = key.split(".");
     const domain: string = splitID[0];
     const entity_id: string = splitID[1];
-
     if (domain === match_domain && entity_id.endsWith(match_suffix)) {
       return ent;
     }
@@ -190,6 +242,16 @@ export function getStrictMatchingEntity(
   match_domain: string,
   match_suffix: string,
 ): HassEntityInfo | undefined {
+  // Primary: match by translation_key (language-independent, works for any HA language).
+  // The entities map is already scoped to this device, so no false positives.
+  for (const key in entities) {
+    const ent = entities[key];
+    const domain: string = key.split(".")[0];
+    if (domain === match_domain && _matchesByTranslationKey(ent, match_suffix)) {
+      return ent;
+    }
+  }
+  // Fallback: entity_id suffix matching (English HA / entities without translation_key)
   if (!printerEntityIdPart) {
     return undefined;
   }
@@ -198,7 +260,6 @@ export function getStrictMatchingEntity(
     const splitID = key.split(".");
     const domain: string = splitID[0];
     const entityIdPart: string = splitID[1].split(printerEntityIdPart)[1];
-
     if (domain === match_domain && entityIdPart === match_suffix) {
       return ent;
     }
@@ -209,15 +270,38 @@ export function getStrictMatchingEntity(
 export function getPrinterEntityIdPart(
   entities: HassEntityInfos,
 ): string | undefined {
+  // Compute the device-name prefix (e.g. "anycubic_kobra_x_") as the longest
+  // common prefix across all entity_id name-parts for this device, truncated
+  // to the last underscore boundary. All entities share the HA device name slug
+  // as their prefix regardless of HA language — only the suffix is translated.
+  const entityIdParts: string[] = Object.keys(entities)
+    .map(k => k.split(".")[1])
+    .filter(Boolean);
+
+  if (entityIdParts.length >= 2) {
+    let common = entityIdParts[0];
+    for (const part of entityIdParts.slice(1)) {
+      let i = 0;
+      while (i < common.length && i < part.length && common[i] === part[i]) i++;
+      common = common.slice(0, i);
+      if (!common) break;
+    }
+    const lastUnderscore = common.lastIndexOf("_");
+    if (lastUnderscore > 0) {
+      return common.slice(0, lastUnderscore + 1); // e.g. "anycubic_kobra_x_"
+    }
+  }
+
+  // Fallback: English entity_id suffix matching
   for (const key in entities) {
     const splitID = key.split(".");
     const domain: string = splitID[0];
     const entity_id: string = splitID[1];
-
     if (domain === "binary_sensor" && entity_id.endsWith("printer_online")) {
       return entity_id.split("printer_online")[0];
     }
   }
+
   return undefined;
 }
 
