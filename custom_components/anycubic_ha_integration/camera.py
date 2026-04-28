@@ -157,6 +157,11 @@ class AnycubicCloudCamera(AnycubicCloudEntity, Camera):
         entity_description: AnycubicCameraEntityDescription,
     ) -> None:
         """Initialise."""
+        # CoordinatorEntity.__init__ does NOT call super().__init__(), so
+        # Camera.__init__() is never reached via the cooperative MRO.
+        # We must call it explicitly to set up _webrtc_provider and other
+        # Camera-specific attributes required by async_internal_added_to_hass.
+        Camera.__init__(self)
         super().__init__(hass, coordinator, printer_id, entity_description)
         self._last_image: bytes | None = None
         self._raw_token: dict[str, Any] | None = None
