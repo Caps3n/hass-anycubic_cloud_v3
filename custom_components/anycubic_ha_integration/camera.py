@@ -1,6 +1,7 @@
 """Support for Anycubic Cloud camera."""
 from __future__ import annotations
 
+import base64
 import hashlib
 import hmac
 import json
@@ -156,8 +157,7 @@ class AnycubicCloudCamera(AnycubicCloudEntity, Camera):
         entity_description: AnycubicCameraEntityDescription,
     ) -> None:
         """Initialise."""
-        AnycubicCloudEntity.__init__(self, hass, coordinator, printer_id, entity_description)
-        Camera.__init__(self)
+        super().__init__(hass, coordinator, printer_id, entity_description)
         self._last_image: bytes | None = None
         self._raw_token: dict[str, Any] | None = None
         self._token_fetched_at: float = 0.0
@@ -352,7 +352,6 @@ class AnycubicCloudCamera(AnycubicCloudEntity, Camera):
         for key in ("Data", "ImageData", "ThumbnailData"):
             b64: str | None = response_body.get(key)
             if b64 and isinstance(b64, str):
-                import base64
                 return base64.b64decode(b64)
 
         LOGGER.debug(
