@@ -900,18 +900,22 @@ class AnycubicPrinter:
             data = payload['data']
             if self.parameter:
                 self.parameter.update_current_temps(
-                    data['curr_hotbed_temp'],
-                    data['curr_nozzle_temp'],
+                    data.get('curr_hotbed_temp', 0),
+                    data.get('curr_nozzle_temp', 0),
                 )
-            self._fan_speed = int(data['settings']['fan_speed_pct'])
-            self._print_speed_pct = int(data['settings']['print_speed_pct'])
-            self._print_speed_mode = int(data['settings']['print_speed_mode'])
-            self._update_latest_project_target_temps(
-                project_id,
-                data['settings']['target_hotbed_temp'],
-                data['settings']['target_nozzle_temp'],
-            )
-            data['settings']
+            settings = data.get('settings', {})
+            if 'fan_speed_pct' in settings:
+                self._fan_speed = int(settings['fan_speed_pct'])
+            if 'print_speed_pct' in settings:
+                self._print_speed_pct = int(settings['print_speed_pct'])
+            if 'print_speed_mode' in settings:
+                self._print_speed_mode = int(settings['print_speed_mode'])
+            if 'target_hotbed_temp' in settings and 'target_nozzle_temp' in settings:
+                self._update_latest_project_target_temps(
+                    project_id,
+                    settings['target_hotbed_temp'],
+                    settings['target_nozzle_temp'],
+                )
             return
         elif action in ['start', 'stop'] and state in ['failed']:
             err_msg = payload.get('msg')
