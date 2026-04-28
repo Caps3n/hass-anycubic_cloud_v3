@@ -2369,7 +2369,7 @@
     var e;
   }
   const fi = (t, e) => {
-      if (0 !== t && (!t || isNaN(t))) return "invalid duration";
+      if (0 !== t && (!t || isNaN(t))) return "–";
       const i = _i(e ? 60 * Math.ceil(Number(t) / 60) : Number(t));
       return `${i.days && i.days > 0 ? `${i.days}d` : ""}${i.hours && i.hours > 0 ? `${i.hours}h` : ""}${i.minutes && i.minutes > 0 ? `${i.minutes}m` : ""}${i.seconds && i.seconds > 0 ? `${i.seconds}s` : e ? "" : "0s"}`;
     },
@@ -2379,7 +2379,7 @@
           return fi(t, i);
         case Le.ETA:
           return ((t, e, i) => {
-            if (0 !== t && (!t || isNaN(t))) return "invalid time";
+            if (0 !== t && (!t || isNaN(t))) return "–";
             const r = e ? "" : ":ss",
               n = i ? `HH:mm${r}` : `h:mm${r} a`,
               s = new Date();
@@ -5585,7 +5585,7 @@
     willUpdate(t) {
       super.willUpdate(t), t.has("timeEntity") && (-1 !== this.lastIntervalId && clearInterval(this.lastIntervalId), this.currentTime = function (t, e = !1) {
         let i;
-        if (t.state) {
+        if (t.state && "unavailable" !== t.state && "unknown" !== t.state) {
           if (t.state.includes(", ")) {
             const [e, r] = t.state.split(", "),
               [n, s, o] = r.split(":"),
@@ -9197,7 +9197,8 @@
         ` : Z;
     }
     _percentComplete() {
-      return Number(di(this.hass, this.printerEntities, this.printerEntityIdPart, "job_progress", -1).state);
+      const t = Number(di(this.hass, this.printerEntities, this.printerEntityIdPart, "job_progress", -1).state);
+      return isNaN(t) || t < 0 ? 0 : Math.min(t, 100);
     }
     static get styles() {
       return p`

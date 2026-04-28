@@ -346,9 +346,9 @@
     M = H ? H.createPolicy("lit-html", {
       createHTML: t => t
     }) : void 0,
-    B = "$lit$",
-    k = `lit$${Math.random().toFixed(9).slice(2)}$`,
-    I = "?" + k,
+    k = "$lit$",
+    B = `lit$${Math.random().toFixed(9).slice(2)}$`,
+    I = "?" + B,
     F = `<${I}>`,
     D = document,
     L = () => D.createComment(""),
@@ -390,7 +390,7 @@
         c = 0;
       for (; c < i.length && (o.lastIndex = c, h = o.exec(i), null !== h);) c = o.lastIndex, o === R ? "!--" === h[1] ? o = j : void 0 !== h[1] ? o = G : void 0 !== h[2] ? (X.test(h[2]) && (s = RegExp("</" + h[2], "g")), o = V) : void 0 !== h[3] && (o = V) : o === V ? ">" === h[0] ? (o = s ?? R, l = -1) : void 0 === h[1] ? l = -2 : (l = o.lastIndex - h[2].length, a = h[1], o = void 0 === h[3] ? V : '"' === h[3] ? W : Y) : o === W || o === Y ? o = V : o === j || o === G ? o = R : (o = V, s = void 0);
       const d = o === V && t[e + 1].startsWith("/>") ? " " : "";
-      n += o === R ? i + F : l >= 0 ? (r.push(a), i.slice(0, l) + B + i.slice(l) + k + d) : i + k + (-2 === l ? e : d);
+      n += o === R ? i + F : l >= 0 ? (r.push(a), i.slice(0, l) + k + i.slice(l) + B + d) : i + B + (-2 === l ? e : d);
     }
     return [tt(t, n + (t[i] || "<?>") + (2 === e ? "</svg>" : "")), r];
   };
@@ -412,9 +412,9 @@
       }
       for (; null !== (r = J.nextNode()) && a.length < o;) {
         if (1 === r.nodeType) {
-          if (r.hasAttributes()) for (const t of r.getAttributeNames()) if (t.endsWith(B)) {
+          if (r.hasAttributes()) for (const t of r.getAttributeNames()) if (t.endsWith(k)) {
             const e = l[n++],
-              i = r.getAttribute(t).split(k),
+              i = r.getAttribute(t).split(B),
               o = /([.?@])?(.*)/.exec(e);
             a.push({
               type: 1,
@@ -423,12 +423,12 @@
               strings: i,
               ctor: "." === o[1] ? at : "?" === o[1] ? ht : "@" === o[1] ? lt : ot
             }), r.removeAttribute(t);
-          } else t.startsWith(k) && (a.push({
+          } else t.startsWith(B) && (a.push({
             type: 6,
             index: s
           }), r.removeAttribute(t));
           if (X.test(r.tagName)) {
-            const t = r.textContent.split(k),
+            const t = r.textContent.split(B),
               e = t.length - 1;
             if (e > 0) {
               r.textContent = H ? H.emptyScript : "";
@@ -444,10 +444,10 @@
           index: s
         });else {
           let t = -1;
-          for (; -1 !== (t = r.data.indexOf(k, t + 1));) a.push({
+          for (; -1 !== (t = r.data.indexOf(B, t + 1));) a.push({
             type: 7,
             index: s
-          }), t += k.length - 1;
+          }), t += B.length - 1;
         }
         s++;
       }
@@ -631,8 +631,8 @@
     }
   }
   const dt = {
-      P: B,
-      A: k,
+      P: k,
+      A: B,
       C: I,
       M: 1,
       L: et,
@@ -873,10 +873,10 @@
     Tt = 6048e5,
     Ht = 864e5,
     Mt = 6e4,
-    Bt = 36e5,
-    kt = Symbol.for("constructDateFrom");
+    kt = 36e5,
+    Bt = Symbol.for("constructDateFrom");
   function It(t, e) {
-    return "function" == typeof t ? t(e) : t && "object" == typeof t && kt in t ? t[kt](e) : t instanceof Date ? new t.constructor(e) : new Date(e);
+    return "function" == typeof t ? t(e) : t && "object" == typeof t && Bt in t ? t[Bt](e) : t instanceof Date ? new t.constructor(e) : new Date(e);
   }
   function Ft(t, e) {
     return It(e || t, t);
@@ -2038,8 +2038,8 @@
     Te = ["D", "DD", "YY", "YYYY"];
   const He = /[yYQqMLwIdDecihHKkms]o|(\w)\1*|''|'(''|[^'])+('|$)|./g,
     Me = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g,
-    Be = /^'([^]*?)'?$/,
-    ke = /''/g,
+    ke = /^'([^]*?)'?$/,
+    Be = /''/g,
     Ie = /[a-zA-Z]/;
   function Fe(t, e, i) {
     const r = Ot(),
@@ -2098,8 +2098,8 @@
     }).join("");
   }
   function De(t) {
-    const e = t.match(Be);
-    return e ? e[1].replace(ke, "'") : t;
+    const e = t.match(ke);
+    return e ? e[1].replace(Be, "'") : t;
   }
   function Le(t, e) {
     const {
@@ -2137,7 +2137,7 @@
       }),
       d = function (t, e, i) {
         const [r, s] = jt(i?.in, t, e),
-          n = (+r - +s) / Bt;
+          n = (+r - +s) / kt;
         return Kt(i?.roundingMethod)(n);
       }(r, c);
     d && (s.hours = d);
@@ -2341,7 +2341,7 @@
     var e;
   }
   const gi = (t, e) => {
-      if (0 !== t && (!t || isNaN(t))) return "invalid duration";
+      if (0 !== t && (!t || isNaN(t))) return "–";
       const i = pi(e ? 60 * Math.ceil(Number(t) / 60) : Number(t));
       return `${i.days && i.days > 0 ? `${i.days}d` : ""}${i.hours && i.hours > 0 ? `${i.hours}h` : ""}${i.minutes && i.minutes > 0 ? `${i.minutes}m` : ""}${i.seconds && i.seconds > 0 ? `${i.seconds}s` : e ? "" : "0s"}`;
     },
@@ -2351,7 +2351,7 @@
           return gi(t, i);
         case Ne.ETA:
           return ((t, e, i) => {
-            if (0 !== t && (!t || isNaN(t))) return "invalid time";
+            if (0 !== t && (!t || isNaN(t))) return "–";
             const r = e ? "" : ":ss",
               s = i ? `HH:mm${r}` : `h:mm${r} a`,
               n = new Date();
@@ -2502,16 +2502,16 @@
       }
     }),
     {
-      I: Bi
+      I: ki
     } = dt,
-    ki = () => document.createComment(""),
+    Bi = () => document.createComment(""),
     Ii = (t, e, i) => {
       const r = t._$AA.parentNode,
         s = void 0 === e ? t._$AB : e._$AA;
       if (void 0 === i) {
-        const e = r.insertBefore(ki(), s),
-          n = r.insertBefore(ki(), s);
-        i = new Bi(e, n, t, t.options);
+        const e = r.insertBefore(Bi(), s),
+          n = r.insertBefore(Bi(), s);
+        i = new ki(e, n, t, t.options);
       } else {
         const e = i._$AB.nextSibling,
           n = i._$AM,
@@ -3165,7 +3165,7 @@
       return "string" != typeof r ? (e.minimumSignificantDigits = i.length, e.maximumSignificantDigits = i.length) : "+" === r ? e.minimumSignificantDigits = i.length : "#" === i[0] ? e.maximumSignificantDigits = i.length : (e.minimumSignificantDigits = i.length, e.maximumSignificantDigits = i.length + ("string" == typeof r ? r.length : 0)), "";
     }), e;
   }
-  function Br(t) {
+  function kr(t) {
     switch (t) {
       case "sign-auto":
         return {
@@ -3205,7 +3205,7 @@
         };
     }
   }
-  function kr(t) {
+  function Br(t) {
     var e;
     if ("E" === t[0] && "E" === t[1] ? (e = {
       notation: "engineering"
@@ -3219,7 +3219,7 @@
     return e;
   }
   function Ir(t) {
-    var e = Br(t);
+    var e = kr(t);
     return e || {};
   }
   function Fr(t) {
@@ -3330,9 +3330,9 @@
           trailingZeroDisplay: "stripIfInteger"
         }) : o && (e = r(r({}, e), Mr(o)));
       } else if (Pr.test(n.stem)) e = r(r({}, e), Mr(n.stem));else {
-        var a = Br(n.stem);
+        var a = kr(n.stem);
         a && (e = r(r({}, e), a));
-        var h = kr(n.stem);
+        var h = Br(n.stem);
         h && (e = r(r({}, e), h));
       }
     }
@@ -4522,26 +4522,26 @@
         }
       }, t;
     }(),
-    Bs = Ms,
-    ks = {
+    ks = Ms,
+    Bs = {
       en: dr
     };
   function Is(t, e, ...i) {
     const r = e.replace(/['"]+/g, "");
     var s;
     try {
-      s = t.split(".").reduce((t, e) => t[e], ks[r]);
+      s = t.split(".").reduce((t, e) => t[e], Bs[r]);
     } catch (e) {
-      s = t.split(".").reduce((t, e) => t[e], ks.en);
+      s = t.split(".").reduce((t, e) => t[e], Bs.en);
     }
-    if (void 0 === s && (s = t.split(".").reduce((t, e) => t[e], ks.en)), !i.length) return s;
+    if (void 0 === s && (s = t.split(".").reduce((t, e) => t[e], Bs.en)), !i.length) return s;
     const n = {};
     for (let t = 0; t < i.length; t += 2) {
       let e = i[t];
       e = e.replace(/^{([^}]+)?}$/, "$1"), n[e] = i[t + 1];
     }
     try {
-      return new Bs(s, e).format(n);
+      return new ks(s, e).format(n);
     } catch (t) {
       return "Translation " + t;
     }
@@ -5071,7 +5071,7 @@
           T = P + g,
           H = n.val(12),
           M = n.val(12),
-          B = v - C - M;
+          k = v - C - M;
         return {
           Scalable: {
             width: o,
@@ -5102,7 +5102,7 @@
             width: x,
             height: w,
             left: E,
-            top: B + .7 * C - w / 2
+            top: k + .7 * C - w / 2
           },
           Track: {
             width: S,
@@ -5116,7 +5116,7 @@
             width: A,
             height: C,
             left: P,
-            top: B
+            top: k
           },
           Nozzle: {
             width: H,
@@ -5525,7 +5525,7 @@
     willUpdate(t) {
       super.willUpdate(t), t.has("timeEntity") && (-1 !== this.lastIntervalId && clearInterval(this.lastIntervalId), this.currentTime = function (t, e = !1) {
         let i;
-        if (t.state) {
+        if (t.state && "unavailable" !== t.state && "unknown" !== t.state) {
           if (t.state.includes(", ")) {
             const [e, r] = t.state.split(", "),
               [s, n, o] = r.split(":"),
@@ -6966,7 +6966,7 @@
     }
   }
   customElements.get("hue-bar") || customElements.define("hue-bar", Mn);
-  const Bn = u`
+  const kn = u`
   height: 100%;
   width: 100%;
   position: absolute;
@@ -6996,7 +6996,7 @@
     12px 12px,
     12px 12px;
 `,
-    kn = u`
+    Bn = u`
   display: inline-block;
   width: 69px;
   padding: 0.325rem 0.5rem;
@@ -7062,7 +7062,7 @@
     height: 210px;
   }
   :host .form-control {
-    ${kn}
+    ${Bn}
   }
   :host .form-control:focus {
     ${In}
@@ -7223,7 +7223,7 @@
     width: 100%;
   }
   :host .swatch span.checky {
-    ${Bn}
+    ${kn}
     z-index: 0;
   }
 `,
@@ -7242,7 +7242,7 @@
   }
 
   :host .form-control {
-    ${kn}
+    ${Bn}
   }
 
   :host .form-control:focus {
@@ -7317,7 +7317,7 @@
     top: -1px;
   }
   :host .transparent-checks {
-    ${Bn}
+    ${kn}
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
   }
@@ -9141,7 +9141,8 @@
         ` : q;
     }
     _percentComplete() {
-      return Number(ci(this.hass, this.printerEntities, this.printerEntityIdPart, "job_progress", -1).state);
+      const t = Number(ci(this.hass, this.printerEntities, this.printerEntityIdPart, "job_progress", -1).state);
+      return isNaN(t) || t < 0 ? 0 : Math.min(t, 100);
     }
     static get styles() {
       return u`

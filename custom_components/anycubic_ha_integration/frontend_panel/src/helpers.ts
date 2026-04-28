@@ -718,7 +718,7 @@ export const formatDuration = (
   round: boolean,
 ): string => {
   if (time !== 0 && (!time || isNaN(time as number))) {
-    return "invalid duration";
+    return "–";
   }
   const dur: dfnsDuration = secondsToDuration(
     round ? Math.ceil(Number(time) / 60) * 60 : Number(time),
@@ -743,7 +743,7 @@ export const formatFutureTime = (
     futureSeconds !== 0 &&
     (!futureSeconds || isNaN(futureSeconds as number))
   ) {
-    return "invalid time";
+    return "–";
   }
   const fmtSeconds = round ? "" : ":ss";
   const fmtString = use_24hr ? `HH:mm${fmtSeconds}` : `h:mm${fmtSeconds} a`;
@@ -775,7 +775,11 @@ export function getEntityTotalSeconds(
   isSeconds: boolean = false,
 ): number {
   let result: number;
-  if (timeEntity.state) {
+  if (
+    timeEntity.state &&
+    timeEntity.state !== "unavailable" &&
+    timeEntity.state !== "unknown"
+  ) {
     if (timeEntity.state.includes(", ")) {
       const [days_string, time_string] = timeEntity.state.split(", ");
       const [hours, minutes, seconds] = time_string.split(":");

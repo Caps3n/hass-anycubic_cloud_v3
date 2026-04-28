@@ -539,7 +539,7 @@ export class AnycubicPrintercardCard extends LitElement {
   };
 
   private _percentComplete(): number {
-    return Number(
+    const val = Number(
       getPrinterSensorStateObj(
         this.hass,
         this.printerEntities,
@@ -548,6 +548,7 @@ export class AnycubicPrintercardCard extends LitElement {
         -1.0,
       ).state,
     );
+    return isNaN(val) || val < 0 ? 0 : Math.min(val, 100);
   }
 
   static get styles(): CSSResult {
