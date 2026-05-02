@@ -77,6 +77,13 @@
           "mqtt_connect_mode": "MQTT Connection Mode"
         }
       },
+      "camera": {
+        "title": "Camera Settings",
+        "description": "Configure the local LAN IP for printers that use a built-in camera stream (e.g. Kobra X). Leave empty to use cloud-based camera only.",
+        "data": {
+          "printer_lan_ip": "Printer LAN IP Address"
+        }
+      },
       "drying": {
         "title": "Drying Presets",
         "data": {
@@ -88,13 +95,6 @@
           "drying_preset_temperature_3": "Dry Preset 3 Temperature",
           "drying_preset_duration_4": "Dry Preset 4 Duration",
           "drying_preset_temperature_4": "Dry Preset 4 Temperature"
-        }
-      },
-      "camera": {
-        "title": "Camera Settings",
-        "description": "Configure the local LAN IP for printers that use a built-in camera stream (e.g. Kobra X). Leave empty to use cloud-based camera only.",
-        "data": {
-          "printer_lan_ip": "Printer LAN IP Address"
         }
       },
       "card_config": {

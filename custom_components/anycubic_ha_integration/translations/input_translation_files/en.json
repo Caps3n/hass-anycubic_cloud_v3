@@ -207,6 +207,7 @@
         "title": "Anycubic Cloud Options",
         "menu_options": {
           "mqtt": "MQTT Settings",
+          "camera": "Camera Settings",
           "drying": "[%key:common::drying%] Presets",
           "card_config": "Panel Card Config",
           "debug": "Debug Settings"
@@ -216,6 +217,13 @@
         "title": "MQTT Settings",
         "data": {
           "mqtt_connect_mode": "MQTT Connection Mode"
+        }
+      },
+      "camera": {
+        "title": "Camera Settings",
+        "description": "Configure the local LAN IP for printers that use a built-in camera stream (e.g. Kobra X). Leave empty to use cloud-based camera only.",
+        "data": {
+          "printer_lan_ip": "Printer LAN IP Address"
         }
       },
       "drying": {
