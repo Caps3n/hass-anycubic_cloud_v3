@@ -16,6 +16,7 @@
 - verbesserter MQTT-Fallback bei Verbindungsproblemen
 - GitHub Actions auf v4 aktualisiert
 - HA 2025.11+ Kompatibilität
+- **Kobra X Kamera-Support** via lokalem LAN-Stream (`http://{Drucker-IP}:18088/flv`)
 
 ---
 
@@ -24,6 +25,7 @@
 - [🧵 Kompatible Drucker](#-kompatible-drucker)
 - [⚙️ Funktionsweise](#-funktionsweise)
 - [🎨 Frontend-Card](#-frontend-card)
+- [📷 Kamera (Kobra X & lokaler LAN-Stream)](#-kamera-kobra-x--lokaler-lan-stream)
 - [🖼️ Galerie](#-galerie)
 - [🧩 Features](#-features)
 - [📦 Installation über HACS (empfohlen)](#-installation-über-hacs-empfohlen)
@@ -70,6 +72,23 @@ Die Lovelace-Karte (`anycubic-printercard`) ist **direkt in dieser Integration e
 Falls die automatische Registrierung nicht funktioniert, manuell hinzufügen unter **Einstellungen → Dashboards → Ressourcen**:
 - **URL:** `/anycubic-card-static`
 - **Typ:** `JavaScript-Modul`
+
+---
+
+## 📷 Kamera (Kobra X & lokaler LAN-Stream)
+
+Drucker wie der **Kobra X** haben eine eingebaute Kamera, die **lokal** über LAN streamt – nicht über die Anycubic Cloud. Damit die Kamera in Home Assistant angezeigt werden kann, muss die **lokale IP-Adresse** des Druckers einmalig eingetragen werden.
+
+### Einrichtung
+
+1. Am Drucker: **Einstellungen → Netzwerk → IP-Adresse** ablesen (z. B. `192.168.1.42`)
+2. In HA: **Einstellungen → Geräte & Dienste → Anycubic → Konfigurieren**
+3. Im Menü **„Kamera‑Einstellungen"** die LAN-IP eintragen
+4. HA neu starten
+
+Danach streamt die Entität `camera.anycubic_kobra_x_camera` direkt über `http://{IP}:18088/flv`.
+
+> 💡 **Hinweis:** Drucker wie Kobra 2 / Kobra 3 verwenden weiterhin die Cloud-Kamera (Tencent IoT Video). Die LAN-IP wird nur als Fallback genutzt, wenn der Cloud-Token nicht verfügbar ist.
 
 ---
 

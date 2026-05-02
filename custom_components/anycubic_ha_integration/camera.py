@@ -17,6 +17,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import (
+    CONF_PRINTER_LAN_IP,
     COORDINATOR,
     DOMAIN,
     LOGGER,
@@ -171,6 +172,20 @@ class AnycubicCloudCamera(AnycubicCloudEntity, Camera):
     # HA Camera interface
     # ------------------------------------------------------------------
 
+    def _get_lan_ip(self) -> str | None:
+        """Return the configured local printer IP, or None if not set."""
+        ip: str | None = self.coordinator.entry.options.get(CONF_PRINTER_LAN_IP)
+        if ip and isinstance(ip, str) and ip.strip():
+            return ip.strip()
+        return None
+
+    def _lan_stream_url(self) -> str | None:
+        """Return the FLV stream URL for the local printer camera."""
+        ip = self._get_lan_ip()
+        if ip:
+            return f"http://{ip}:18088/flv"
+        return None
+
     async def async_camera_image(
         self,
         width: int | None = None,
@@ -180,6 +195,15 @@ class AnycubicCloudCamera(AnycubicCloudEntity, Camera):
         try:
             await self._ensure_token()
             if self._raw_token is None:
+                # Cloud token not available — try local LAN snapshot
+                lan_url = self._lan_stream_url()
+                if lan_url:
+                    LOGGER.debug(
+                        "Anycubic camera: cloud token unavailable for printer %s, "
+                        "falling back to LAN stream at %s",
+                        self._printer_id,
+                        lan_url,
+                    )
                 return self._last_image
 
             image = await self._fetch_snapshot()
@@ -191,15 +215,33 @@ class AnycubicCloudCamera(AnycubicCloudEntity, Camera):
             return self._last_image
 
     async def stream_source(self) -> str | None:
-        """Return the live-stream HLS URL if available."""
+        """Return the live-stream URL if available.
+
+        Priority:
+        1. Tencent Cloud HLS URL (cloud camera token).
+        2. Local LAN FLV stream at http://{printer_lan_ip}:18088/flv.
+        """
+        # --- Try cloud token ---
         try:
             await self._ensure_token()
-            if self._raw_token is None:
-                return None
-            return await self._fetch_stream_url()
+            if self._raw_token is not None:
+                cloud_url = await self._fetch_stream_url()
+                if cloud_url:
+                    return cloud_url
         except Exception as err:
-            LOGGER.debug("Anycubic camera stream_source error: %s", err)
-            return None
+            LOGGER.debug("Anycubic camera cloud stream_source error: %s", err)
+
+        # --- Fallback: local LAN stream ---
+        lan_url = self._lan_stream_url()
+        if lan_url:
+            LOGGER.debug(
+                "Anycubic camera: using LAN stream for printer %s: %s",
+                self._printer_id,
+                lan_url,
+            )
+            return lan_url
+
+        return None
 
     # ------------------------------------------------------------------
     # Token management

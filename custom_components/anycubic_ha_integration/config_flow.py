@@ -30,6 +30,7 @@ from .const import (
     CONF_DRYING_PRESET_TEMPERATURE_,
     CONF_MQTT_CONNECT_MODE,
     CONF_PRINTER_ID_LIST,
+    CONF_PRINTER_LAN_IP,
     CONF_USER_AUTH_MODE,
     CONF_USER_DEVICE_ID,
     CONF_USER_TOKEN,
@@ -499,6 +500,7 @@ class AnycubicCloudOptionsFlowHandler(OptionsFlow):
 
         menu_options = list([
             "mqtt",
+            "camera",
             "card_config",
             "debug",
         ])
@@ -555,6 +557,28 @@ class AnycubicCloudOptionsFlowHandler(OptionsFlow):
         return self.async_show_form(
             step_id="drying",
             data_schema=self._build_drying_options_schema(),
+            errors={},
+        )
+
+    async def async_step_camera(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Manage camera options (local LAN IP for Kobra X and similar)."""
+        if user_input is not None:
+            # Normalize: strip whitespace, store empty string as absent
+            lan_ip = user_input.get(CONF_PRINTER_LAN_IP, "").strip()
+            user_input[CONF_PRINTER_LAN_IP] = lan_ip
+            return self.async_create_entry_with_existing_options(user_input)
+
+        default_lan_ip = self.entry.options.get(CONF_PRINTER_LAN_IP, "")
+
+        return self.async_show_form(
+            step_id="camera",
+            data_schema=vol.Schema({
+                vol.Optional(
+                    CONF_PRINTER_LAN_IP, default=default_lan_ip
+                ): cv.string,
+            }),
             errors={},
         )
 

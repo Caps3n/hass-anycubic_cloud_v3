@@ -53,6 +53,7 @@ CONF_SPEED = "speed"
 CONF_TEMPERATURE = "temperature"
 CONF_LAYERS = "layers"
 CONF_TIME = "time"
+CONF_PRINTER_LAN_IP = "printer_lan_ip"
 
 AC_EVENT_PRINT_CLOUD_START = "print_cloud_start"
 

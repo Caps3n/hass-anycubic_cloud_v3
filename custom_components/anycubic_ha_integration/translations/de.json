@@ -65,6 +65,7 @@
         "title": "Anycubic Cloud – Optionen",
         "menu_options": {
           "mqtt": "MQTT‑Einstellungen",
+          "camera": "Kamera‑Einstellungen",
           "drying": "Trocknungsvorgaben",
           "card_config": "Panel‑Kartenkonfiguration",
           "debug": "Debug‑Einstellungen"
@@ -87,6 +88,13 @@
           "drying_preset_temperature_3": "Vorgabe 3 – Temperatur",
           "drying_preset_duration_4": "Vorgabe 4 – Dauer",
           "drying_preset_temperature_4": "Vorgabe 4 – Temperatur"
+        }
+      },
+      "camera": {
+        "title": "Kamera‑Einstellungen",
+        "description": "Lokale LAN‑IP des Druckers für Modelle mit eingebautem Kamera‑Stream (z. B. Kobra X). Leer lassen, um nur die Cloud‑Kamera zu verwenden.",
+        "data": {
+          "printer_lan_ip": "LAN‑IP‑Adresse des Druckers"
         }
       },
       "card_config": {

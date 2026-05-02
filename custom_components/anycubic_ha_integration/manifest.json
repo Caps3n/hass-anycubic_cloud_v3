@@ -10,7 +10,8 @@
     "file_upload",
     "http",
     "image",
-    "panel_custom"
+    "panel_custom",
+    "stream"
   ],
   "documentation": "https://github.com/Caps3n/hass-anycubic_cloud_v3",
   "iot_class": "cloud_polling",
@@ -21,5 +22,5 @@
   "requirements": [
     "paho-mqtt>=2.0.0,<3"
   ],
-  "version": "0.0.70"
+  "version": "0.0.71"
 }
