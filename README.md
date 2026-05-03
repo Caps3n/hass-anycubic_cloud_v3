@@ -36,6 +36,7 @@
 - [🙌 Mitwirkende](#-mitwirkende)
 - [📄 Lizenz](#-lizenz)
 - [💬 Feedback / Probleme](#-feedback--probleme)
+- [☕ Unterstützen](#-unterstützen)
 - [✅ Kompatibilität](#-kompatibilität)
 
 ---
@@ -197,6 +198,14 @@ MIT License – frei für private und kommerzielle Nutzung. Siehe LICENSE-Datei.
 ## 💬 Feedback / Probleme
 
 ➡️ [Issue öffnen](https://github.com/Caps3n/hass-anycubic_cloud_v3/issues)
+
+---
+
+## ☕ Unterstützen
+
+Wenn dir diese Integration gefällt und du die Weiterentwicklung unterstützen möchtest:
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-caps3n-yellow?logo=buy-me-a-coffee&logoColor=white)](https://www.buymeacoffee.com/caps3n)
 
 ---
 
