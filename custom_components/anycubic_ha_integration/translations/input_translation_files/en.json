@@ -490,6 +490,11 @@
       "secondary_multi_color_box_fw_version": {
         "name": "[%key:common::secondary%] ACE [%key:common::firmware%]"
       }
+    },
+    "select": {
+      "job_speed_mode": {
+        "name": "[%key:common::speed_mode%]"
+      }
     }
   },
   "services": {
@@ -717,6 +722,17 @@
         "time": {
           "name": "[%key:common::on_time%]",
           "description": "[%key:common::on_time%]"
+        }
+      }
+    },
+    "set_printer_lan_ip": {
+      "name": "Set Printer LAN IP",
+      "description": "Sets or clears the local network IP address for the printer camera (e.g. Kobra X).",
+      "fields": {
+        "[%dictkey:common::service_fields::config_entry%]": {},
+        "printer_lan_ip": {
+          "name": "LAN IP Address",
+          "description": "Local IP address of the printer (e.g. 192.168.1.42). Leave empty to clear."
         }
       }
     }

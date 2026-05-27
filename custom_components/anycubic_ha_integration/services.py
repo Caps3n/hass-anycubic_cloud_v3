@@ -29,6 +29,7 @@ from .const import (
     CONF_FINISHED,
     CONF_LAYERS,
     CONF_PRINTER_ID,
+    CONF_PRINTER_LAN_IP,
     CONF_PRINTER_NAME,
     CONF_SLOT_COLOR_BLUE,
     CONF_SLOT_COLOR_GREEN,
@@ -863,6 +864,31 @@ class ChangePrintOnTime(BaseChangePrintSetting):
             raise HomeAssistantError(error) from error
 
 
+class SetPrinterLanIp(AnycubicCloudServiceCall):
+    """Set or clear the local LAN IP address for a printer (e.g. Kobra X camera)."""
+
+    schema = vol.Schema({
+        vol.Required(ATTR_CONFIG_ENTRY): selector.ConfigEntrySelector(
+            {"integration": DOMAIN}
+        ),
+        vol.Optional(CONF_PRINTER_LAN_IP, default=""): cv.string,
+    })
+
+    async def async_call_service(self, service: ServiceCall) -> None:
+        """Update the printer_lan_ip option and reload the config entry."""
+        coordinator = self._get_coordinator(service)
+        lan_ip = str(service.data.get(CONF_PRINTER_LAN_IP, "")).strip()
+
+        new_options = dict(coordinator.entry.options)
+        new_options[CONF_PRINTER_LAN_IP] = lan_ip
+
+        self.hass.config_entries.async_update_entry(
+            coordinator.entry,
+            options=new_options,
+        )
+        LOGGER.debug("set_printer_lan_ip: updated LAN IP to '%s'", lan_ip)
+
+
 SERVICES = (
     ("multi_color_box_set_slot_pla", MultiColorBoxSetSlotPla),
     ("multi_color_box_set_slot_petg", MultiColorBoxSetSlotPetg),
@@ -890,4 +916,5 @@ SERVICES = (
     ("change_print_bottom_time", ChangePrintBottomTime),
     ("change_print_off_time", ChangePrintOffTime),
     ("change_print_on_time", ChangePrintOnTime),
+    ("set_printer_lan_ip", SetPrinterLanIp),
 )

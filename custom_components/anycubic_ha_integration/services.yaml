@@ -212,3 +212,10 @@ change_print_on_time:
     time:
       required: true
       selector: *bigfloat_selector
+set_printer_lan_ip:
+  fields:
+    config_entry: *anycubic_config_entry
+    printer_lan_ip:
+      required: false
+      selector:
+        text: {}

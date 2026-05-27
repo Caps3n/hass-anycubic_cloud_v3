@@ -27,7 +27,11 @@ from homeassistant.helpers.storage import Store
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .anycubic_cloud_api.anycubic_api import AnycubicMQTTAPI as AnycubicAPI
-from .anycubic_cloud_api.exceptions.exceptions import AnycubicAPIError, AnycubicAPIParsingError
+from .anycubic_cloud_api.exceptions.exceptions import (
+    AnycubicAPIError,
+    AnycubicAPIParsingError,
+    AnycubicAuthTokensExpired,
+)
 from .const import (
     API_SETUP_RETRIES,
     API_SETUP_RETRY_INTERVAL_SECONDS,
@@ -100,6 +104,7 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._mqtt_file_list_check_lock = asyncio.Lock()
         self._mqtt_last_refresh: int | None = None
         self._printer_device_map: dict[str, int] | None = None
+        self._printer_job_complete_state: dict[int, bool | None] = dict()
         mqtt_connect_mode = self.entry.options.get(CONF_MQTT_CONNECT_MODE)
         self._mqtt_connection_mode = (
             AnycubicMQTTConnectMode.Printing_Only
@@ -411,7 +416,31 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
         return data_dict
 
+    def _check_and_fire_print_events(self) -> None:
+        """Fire anycubic_print_complete HA-Event when a job transitions to finished."""
+        for printer_id, printer in self._anycubic_printers.items():
+            prev_complete = self._printer_job_complete_state.get(printer_id)
+            curr_complete = printer.latest_project_print_complete
+
+            if curr_complete and not prev_complete:
+                self.hass.bus.async_fire(
+                    "anycubic_print_complete",
+                    {
+                        "printer_id": printer_id,
+                        "printer_name": printer.name,
+                        "job_name": printer.latest_project_name,
+                    },
+                )
+                LOGGER.debug(
+                    "Fired anycubic_print_complete for printer %s job '%s'",
+                    printer_id,
+                    printer.latest_project_name,
+                )
+
+            self._printer_job_complete_state[printer_id] = curr_complete
+
     async def _async_force_data_refresh(self) -> None:
+        self._check_and_fire_print_events()
         self.data = self._build_coordinator_data()
         self.last_update_success = True
         self.async_update_listeners()
@@ -834,6 +863,11 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
         except ConfigEntryAuthFailed:
             raise
+
+        except AnycubicAuthTokensExpired as error:
+            raise ConfigEntryAuthFailed(
+                "Anycubic token abgelaufen – bitte Token in der Integration neu eintragen."
+            ) from error
 
         except AnycubicAPIParsingError as error:
             self._failed_updates += 1

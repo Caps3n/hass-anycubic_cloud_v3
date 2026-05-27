@@ -348,6 +348,11 @@
       "secondary_multi_color_box_fw_version": {
         "name": "ACE‑Firmware (Sekundär)"
       }
+    },
+    "select": {
+      "job_speed_mode": {
+        "name": "Druckgeschwindigkeit"
+      }
     }
   },
   "services": {
@@ -1080,6 +1085,20 @@
         "time": {
           "name": "Belichtungszeit (An)",
           "description": "Zeit in Sekunden."
+        }
+      }
+    },
+    "set_printer_lan_ip": {
+      "name": "Drucker‑LAN‑IP setzen",
+      "description": "Setzt oder löscht die lokale Netzwerk‑IP des Druckers für die Kamera (z. B. Kobra X).",
+      "fields": {
+        "config_entry": {
+          "name": "Konfigurationseintrag",
+          "description": "Anycubic‑Integration auswählen."
+        },
+        "printer_lan_ip": {
+          "name": "LAN‑IP‑Adresse",
+          "description": "Lokale IP‑Adresse des Druckers (z. B. 192.168.1.42). Leer lassen zum Löschen."
         }
       }
     }
