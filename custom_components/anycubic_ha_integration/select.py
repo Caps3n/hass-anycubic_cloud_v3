@@ -37,7 +37,7 @@ class AnycubicSelectEntityDescription(
     """Describes an Anycubic Cloud select entity."""
 
 
-SELECT_TYPES: list[AnycubicSelectEntityDescription] = [
+SELECT_TYPES: list[AnycubicCloudEntityDescription] = [
     AnycubicSelectEntityDescription(
         key="job_speed_mode",
         translation_key="job_speed_mode",
