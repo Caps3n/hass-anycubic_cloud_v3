@@ -87,7 +87,8 @@ class AnycubicCloudSelect(AnycubicCloudEntity, SelectEntity):
             self.coordinator, self._printer_id, self.entity_description.key
         )
         if attr and attr.get("available_modes"):
-            return attr["available_modes"]
+            modes: list[dict[str, Any]] = attr["available_modes"]
+            return modes
         return _DEFAULT_SPEED_MODES
 
     def _build_options(self) -> list[str]:
