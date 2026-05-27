@@ -91,7 +91,7 @@ class AnycubicCloudSelect(AnycubicCloudEntity, SelectEntity):
         return _DEFAULT_SPEED_MODES
 
     def _build_options(self) -> list[str]:
-        return [m["description"] for m in self._available_modes()]
+        return [str(m["description"]) for m in self._available_modes()]
 
     def _mode_for_title(self, title: str) -> int | None:
         for m in self._available_modes():
@@ -113,9 +113,10 @@ class AnycubicCloudSelect(AnycubicCloudEntity, SelectEntity):
 
     @property
     def current_option(self) -> str | None:
-        return printer_state_for_key(
+        state = printer_state_for_key(
             self.coordinator, self._printer_id, self.entity_description.key
         )
+        return str(state) if state is not None else None
 
     @property
     def options(self) -> list[str]:
