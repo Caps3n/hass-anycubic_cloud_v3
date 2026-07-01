@@ -38,6 +38,7 @@ def process_card_config(
 async def async_register_panel(
     hass: HomeAssistant,
     conf_object: Any,
+    camera_entity_map: dict[str, str] | None = None,
 ) -> None:
     """Register the Anycubic Cloud frontend panel and Lovelace card."""
     if DOMAIN not in hass.data.get("frontend_panels", {}):
@@ -64,6 +65,9 @@ async def async_register_panel(
         LOGGER.debug("Registered Anycubic card as Lovelace extra module: %s", CARD_URL)
 
         conf = process_card_config(conf_object)
+
+        if camera_entity_map:
+            conf["cameraEntityIds"] = dict(camera_entity_map)
 
         LOGGER.debug(f"Processed panel config: {conf}")
 

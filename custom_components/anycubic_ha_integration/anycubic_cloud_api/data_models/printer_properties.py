@@ -594,6 +594,40 @@ class AnycubicMultiColorBox:
 
         return ams_box_mapping
 
+    def build_mapping_for_current_slots(
+        self,
+        slot_index_list: list[int],
+    ) -> list[AnycubicMaterialMapping]:
+        """Build an ACE mapping from the spools currently loaded in each slot.
+
+        Used for printer-local/USB files, where no gcode material list is
+        available. Material and colour are taken from whatever spool is
+        physically loaded in the requested slot right now; filament usage
+        can't be known in advance so it's reported as 0.
+        """
+        box_slots = self.slots
+        ams_box_mapping = list()
+
+        for spool_index in slot_index_list:
+            slot_index = spool_index - (4 * self.box_id)
+
+            if slot_index < 0 or slot_index > 3:
+                continue
+
+            ams_slot = box_slots[slot_index]
+            material = AnycubicMaterialMapping(
+                spool_index=spool_index,
+                filament_used=0.0,
+                material_type=ams_slot.material_type,
+                color_red=ams_slot.color_red,
+                color_green=ams_slot.color_green,
+                color_blue=ams_slot.color_blue,
+                paint_index=0,
+            )
+            ams_box_mapping.append(material)
+
+        return ams_box_mapping
+
     @classmethod
     def from_json(cls, data: dict[str, Any] | None) -> AnycubicMultiColorBox | None:
         if data is None:

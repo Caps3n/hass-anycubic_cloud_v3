@@ -9,7 +9,11 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import PrinterEntityType
 from .coordinator import AnycubicCloudDataUpdateCoordinator
-from .helpers import build_printer_device_info, printer_entity_unique_id
+from .helpers import (
+    build_printer_device_info,
+    printer_entity_suggested_object_id,
+    printer_entity_unique_id,
+)
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -44,3 +48,10 @@ class AnycubicCloudEntity(CoordinatorEntity[AnycubicCloudDataUpdateCoordinator],
         )
         self.entity_description = entity_description
         self._attr_unique_id = printer_entity_unique_id(coordinator, self._printer_id, entity_description.key)
+        # Stable, language-independent entity_id suggestion for newly created
+        # entities. Existing entity_ids are untouched (HA only applies this on
+        # first registration); use the migrate_entity_ids service to rename
+        # already-registered entities that predate this.
+        self._attr_suggested_object_id = printer_entity_suggested_object_id(
+            coordinator, self._printer_id, entity_description.key
+        )

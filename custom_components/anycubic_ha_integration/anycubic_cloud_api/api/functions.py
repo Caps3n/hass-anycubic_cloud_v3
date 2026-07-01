@@ -30,6 +30,7 @@ from ..data_models.orders import (
     AnycubicProjectOrderRequest,
     AnycubicStartPrintRequestCloud,
     AnycubicStartPrintRequestLocal,
+    AnycubicStartPrintRequestUdisk,
 )
 from ..data_models.print_response import AnycubicPrintResponse
 from ..data_models.printer import AnycubicPrinter
@@ -914,6 +915,7 @@ class AnycubicAPIFunctions(AnycubicAPIBase):
         printer: AnycubicPrinter,
         file_name: str,
         file_path: str = "",
+        ams_box_mapping: list[AnycubicMaterialMapping] | None = None,
     ) -> str | None:
         if not printer:
             return None
@@ -925,7 +927,29 @@ class AnycubicAPIFunctions(AnycubicAPIBase):
 
         return await self._send_order_start_print(
             printer=printer,
-            print_request=print_request
+            print_request=print_request,
+            ams_box_mapping=ams_box_mapping,
+        )
+
+    async def _send_order_print_udisk_file(
+        self,
+        printer: AnycubicPrinter,
+        file_name: str,
+        file_path: str = "",
+        ams_box_mapping: list[AnycubicMaterialMapping] | None = None,
+    ) -> str | None:
+        if not printer:
+            return None
+
+        print_request = AnycubicStartPrintRequestUdisk(
+            filename=file_name,
+            filepath=file_path,
+        )
+
+        return await self._send_order_start_print(
+            printer=printer,
+            print_request=print_request,
+            ams_box_mapping=ams_box_mapping,
         )
 
     #
@@ -1792,6 +1816,40 @@ class AnycubicAPIFunctions(AnycubicAPIBase):
         )
 
         return await file_upload.async_process_upload()
+
+    async def print_local_file(
+        self,
+        printer: AnycubicPrinter,
+        file_name: str,
+        file_path: str = "",
+        ams_box_mapping: list[AnycubicMaterialMapping] | None = None,
+    ) -> str | None:
+        if printer is None:
+            raise AnycubicAPIError(ErrorsGeneral.no_printer_to_print)
+
+        return await self._send_order_print_local_file(
+            printer=printer,
+            file_name=file_name,
+            file_path=file_path,
+            ams_box_mapping=ams_box_mapping,
+        )
+
+    async def print_udisk_file(
+        self,
+        printer: AnycubicPrinter,
+        file_name: str,
+        file_path: str = "",
+        ams_box_mapping: list[AnycubicMaterialMapping] | None = None,
+    ) -> str | None:
+        if printer is None:
+            raise AnycubicAPIError(ErrorsGeneral.no_printer_to_print)
+
+        return await self._send_order_print_udisk_file(
+            printer=printer,
+            file_name=file_name,
+            file_path=file_path,
+            ams_box_mapping=ams_box_mapping,
+        )
 
     async def print_with_cloud_file_id(
         self,

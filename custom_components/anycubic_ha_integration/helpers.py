@@ -6,6 +6,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Any
 
 from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC, DeviceInfo
+from homeassistant.util import slugify
 
 from .anycubic_cloud_api.const.enums import AnycubicPrinterMaterialType
 from .const import (
@@ -219,6 +220,25 @@ def printer_entity_unique_id(
     entity_suffix: str,
 ) -> str:
     return f"{printer_state_for_key(coordinator, printer_id, 'machine_mac')}-{entity_suffix}"
+
+
+def slug_for_printer_entity(printer_name: str, entity_key: str) -> str:
+    """Build a stable, language-independent object_id slug for a printer entity.
+
+    Used both when new entities are first registered (see AnycubicCloudEntity)
+    and by the migrate_entity_ids service, so both sides always agree on what
+    the "correct" entity_id looks like regardless of the HA UI language.
+    """
+    return slugify(f"{printer_name}_{entity_key}")
+
+
+def printer_entity_suggested_object_id(
+    coordinator: AnycubicCloudDataUpdateCoordinator,
+    printer_id: int,
+    entity_key: str,
+) -> str:
+    printer_name = printer_state_for_key(coordinator, printer_id, 'name')
+    return slug_for_printer_entity(printer_name, entity_key)
 
 
 def state_string_active(state: Any) -> str:

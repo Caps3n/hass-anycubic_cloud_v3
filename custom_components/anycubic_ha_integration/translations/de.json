@@ -92,7 +92,7 @@
       },
       "camera": {
         "title": "Kamera‑Einstellungen",
-        "description": "Lokale LAN‑IP des Druckers für Modelle mit eingebautem Kamera‑Stream (z. B. Kobra X). Leer lassen, um nur die Cloud‑Kamera zu verwenden.",
+        "description": "Lokale LAN‑IP des Druckers für Modelle mit eingebautem Kamera‑Stream (z. B. Kobra X). Leer lassen, um nur die Cloud‑Kamera zu verwenden. Darunter kann zusätzlich pro Drucker eine Home-Assistant-Kamera-Entity zugeordnet werden (z. B. für eine Rinkhals/Moonraker-Webcam) - diese ersetzt dann die Kamera dieses Druckers in der Nebenansicht des eingebauten Panels. Feld leer lassen, um die Standardkamera des jeweiligen Druckers weiter zu verwenden.",
         "data": {
           "printer_lan_ip": "LAN‑IP‑Adresse des Druckers"
         }
@@ -802,6 +802,66 @@
         }
       }
     },
+    "print_file_local": {
+      "name": "Datei drucken (lokal)",
+      "description": "Startet den Druck einer Datei, die bereits im lokalen Speicher des Druckers liegt, ohne sie von Home Assistant hochzuladen.",
+      "fields": {
+        "config_entry": {
+          "name": "Konfigurationseintrag",
+          "description": "Zu verwendender Konfigurationseintrag für diesen Dienst."
+        },
+        "device_id": {
+          "name": "Druckergerät",
+          "description": "Druckergerät (falls keine Drucker‑ID verwendet wird)."
+        },
+        "printer_id": {
+          "name": "Drucker‑ID",
+          "description": "Drucker‑ID (falls kein Gerät verwendet wird)."
+        },
+        "filename": {
+          "name": "Dateiname",
+          "description": "Vollständiger Dateiname (mit Endung) wie in der lokalen Dateiliste des Druckers angezeigt."
+        },
+        "filepath": {
+          "name": "Ordnerpfad",
+          "description": "Ordnerpfad auf dem Drucker, falls sich die Datei in einem Unterordner befindet. Leer lassen für das Stammverzeichnis."
+        },
+        "slot_number": {
+          "name": "Slotnummernliste",
+          "description": "Optionale ACE‑Slotnummern (1–4) zur Zuordnung der Druckfarben, z. B. [1, 2]. Wird aus den aktuell in diesen Slots geladenen Spulen gebildet – nicht gegen die tatsächliche Farbanzahl der Datei geprüft."
+        }
+      }
+    },
+    "print_file_udisk": {
+      "name": "Datei drucken (USB‑Stick)",
+      "description": "Startet den Druck einer Datei, die bereits auf einem am Drucker angeschlossenen USB‑Stick liegt, ohne sie von Home Assistant hochzuladen.",
+      "fields": {
+        "config_entry": {
+          "name": "Konfigurationseintrag",
+          "description": "Zu verwendender Konfigurationseintrag für diesen Dienst."
+        },
+        "device_id": {
+          "name": "Druckergerät",
+          "description": "Druckergerät (falls keine Drucker‑ID verwendet wird)."
+        },
+        "printer_id": {
+          "name": "Drucker‑ID",
+          "description": "Drucker‑ID (falls kein Gerät verwendet wird)."
+        },
+        "filename": {
+          "name": "Dateiname",
+          "description": "Vollständiger Dateiname (mit Endung) wie in der USB‑Dateiliste des Druckers angezeigt."
+        },
+        "filepath": {
+          "name": "Ordnerpfad",
+          "description": "Ordnerpfad auf dem USB‑Stick, falls sich die Datei in einem Unterordner befindet. Leer lassen für das Stammverzeichnis."
+        },
+        "slot_number": {
+          "name": "Slotnummernliste",
+          "description": "Optionale ACE‑Slotnummern (1–4) zur Zuordnung der Druckfarben, z. B. [1, 2]. Wird aus den aktuell in diesen Slots geladenen Spulen gebildet – nicht gegen die tatsächliche Farbanzahl der Datei geprüft."
+        }
+      }
+    },
     "delete_file_local": {
       "name": "Datei löschen (Lokal)",
       "description": "Löscht eine Datei aus dem lokalen Druckerspeicher.",
@@ -1099,6 +1159,20 @@
         "printer_lan_ip": {
           "name": "LAN‑IP‑Adresse",
           "description": "Lokale IP‑Adresse des Druckers (z. B. 192.168.1.42). Leer lassen zum Löschen."
+        }
+      }
+    },
+    "migrate_entity_ids": {
+      "name": "Entity-IDs migrieren",
+      "description": "Benennt bestehende Entity-IDs dieser Integration auf den stabilen, englischen Object-ID-Slug um, den neu angelegte Entities bereits verwenden. Zuerst mit dry_run ausführen und die geplanten Umbenennungen im Log prüfen, bevor sie angewendet werden.",
+      "fields": {
+        "config_entry": {
+          "name": "Konfigurationseintrag",
+          "description": "Anycubic‑Integration auswählen."
+        },
+        "dry_run": {
+          "name": "Testlauf (dry_run)",
+          "description": "Wenn aktiviert (Standard), werden die geplanten Umbenennungen nur geloggt, ohne etwas zu ändern."
         }
       }
     }

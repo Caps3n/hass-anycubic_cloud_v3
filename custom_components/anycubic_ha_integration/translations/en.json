@@ -79,7 +79,7 @@
       },
       "camera": {
         "title": "Camera Settings",
-        "description": "Configure the local LAN IP for printers that use a built-in camera stream (e.g. Kobra X). Leave empty to use cloud-based camera only.",
+        "description": "Configure the local LAN IP for printers that use a built-in camera stream (e.g. Kobra X). Leave empty to use cloud-based camera only. Below, you can also map a Home Assistant camera entity to each printer (e.g. for a Rinkhals/Moonraker webcam) - this overrides that printer's camera in the built-in panel's side view. Leave a printer's field empty to keep using its default camera.",
         "data": {
           "printer_lan_ip": "Printer LAN IP Address"
         }
@@ -802,6 +802,66 @@
         }
       }
     },
+    "print_file_local": {
+      "name": "Print file (Local)",
+      "description": "Start printing a file that already exists on the printer's local storage, without uploading it from Home Assistant.",
+      "fields": {
+        "config_entry": {
+          "name": "Config Entry",
+          "description": "The config entry to use for this service."
+        },
+        "device_id": {
+          "name": "Printer Device",
+          "description": "Printer Device (if not using ID)."
+        },
+        "printer_id": {
+          "name": "Printer ID",
+          "description": "Printer ID (if not using device)."
+        },
+        "filename": {
+          "name": "File Name",
+          "description": "Full file name (with extension)"
+        },
+        "filepath": {
+          "name": "Folder Path",
+          "description": "Folder path, if the file is in a subfolder. Leave empty for the root folder."
+        },
+        "slot_number": {
+          "name": "Slot Number List",
+          "description": "Slot Number List (1-4) to map to print colours. e.g. [1, 2]"
+        }
+      }
+    },
+    "print_file_udisk": {
+      "name": "Print file (USB Disk)",
+      "description": "Start printing a file that already exists on a USB disk plugged into the printer, without uploading it from Home Assistant.",
+      "fields": {
+        "config_entry": {
+          "name": "Config Entry",
+          "description": "The config entry to use for this service."
+        },
+        "device_id": {
+          "name": "Printer Device",
+          "description": "Printer Device (if not using ID)."
+        },
+        "printer_id": {
+          "name": "Printer ID",
+          "description": "Printer ID (if not using device)."
+        },
+        "filename": {
+          "name": "File Name",
+          "description": "Full file name (with extension)"
+        },
+        "filepath": {
+          "name": "Folder Path",
+          "description": "Folder path, if the file is in a subfolder. Leave empty for the root folder."
+        },
+        "slot_number": {
+          "name": "Slot Number List",
+          "description": "Slot Number List (1-4) to map to print colours. e.g. [1, 2]"
+        }
+      }
+    },
     "delete_file_local": {
       "name": "Delete file (Local)",
       "description": "Delete a file from printer local storage.",
@@ -1099,6 +1159,20 @@
         "printer_lan_ip": {
           "name": "LAN IP Address",
           "description": "Local IP address of the printer (e.g. 192.168.1.42). Leave empty to clear."
+        }
+      }
+    },
+    "migrate_entity_ids": {
+      "name": "Migrate Entity IDs",
+      "description": "Rename this integration's existing entity_ids to the stable, English object_id used by newly created entities. Run with dry_run first and check the log for the planned renames before applying.",
+      "fields": {
+        "config_entry": {
+          "name": "Config Entry",
+          "description": "The config entry to use for this service."
+        },
+        "dry_run": {
+          "name": "Dry Run",
+          "description": "If enabled (default), only logs the planned renames without changing anything."
         }
       }
     }

@@ -15,7 +15,12 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
-from homeassistant.helpers import config_validation as cv, selector
+from homeassistant.helpers import (
+    config_validation as cv,
+    device_registry as dr,
+    entity_registry as er,
+    selector,
+)
 
 from .anycubic_cloud_api.data_models.print_response import AnycubicPrintResponse
 from .anycubic_cloud_api.data_models.printer import AnycubicPrinter
@@ -25,7 +30,9 @@ from .const import (
     ATTR_ANYCUBIC_EVENT,
     ATTR_CONFIG_ENTRY,
     CONF_BOX_ID,
+    CONF_DRY_RUN,
     CONF_FILE_ID,
+    CONF_FILEPATH,
     CONF_FINISHED,
     CONF_LAYERS,
     CONF_PRINTER_ID,
@@ -45,6 +52,7 @@ from .const import (
     LOGGER,
     MAX_FILE_UPLOAD_RETRIES,
 )
+from .helpers import slug_for_printer_entity
 
 if TYPE_CHECKING:
     from .coordinator import AnycubicCloudDataUpdateCoordinator
@@ -548,6 +556,70 @@ class PrintAndUploadNoCloudSave(BasePrintWithFile):
             )
 
 
+class BasePrintExistingFile(AnycubicCloudServiceCall):
+    """Base for printing a file that already exists on the printer/USB storage."""
+
+    schema = build_anycubic_service_schema(
+        input_service_schema={
+            vol.Required(CONF_FILENAME): cv.string,
+            vol.Optional(CONF_FILEPATH, default=""): cv.string,
+            vol.Optional(CONF_SLOT_NUMBER): vol.All(cv.ensure_list, [cv.positive_int]),
+        }
+    )
+
+
+class PrintFileLocal(BasePrintExistingFile):
+    """Print a file already stored on the printer's local storage."""
+
+    async def async_call_service(self, service: ServiceCall) -> None:
+        """Execute service call."""
+
+        printer = self._get_printer(service)
+        file_name = service.data[CONF_FILENAME]
+        file_path = service.data.get(CONF_FILEPATH, "")
+        slot_idx_list = self._get_slot_num_list(service)
+
+        if slot_idx_list is not None:
+            LOGGER.warning(
+                "print_file_local: ACE slot mapping for printer-local files is built "
+                "from the spools currently loaded in the requested slots, not from the "
+                "file itself (unlike cloud prints, slot count/order can't be validated "
+                "against the gcode). Make sure slot order matches what the file expects."
+            )
+
+        await printer.print_local_file(
+            file_name=file_name,
+            file_path=file_path,
+            slot_index_list=slot_idx_list,
+        )
+
+
+class PrintFileUdisk(BasePrintExistingFile):
+    """Print a file already stored on a USB disk plugged into the printer."""
+
+    async def async_call_service(self, service: ServiceCall) -> None:
+        """Execute service call."""
+
+        printer = self._get_printer(service)
+        file_name = service.data[CONF_FILENAME]
+        file_path = service.data.get(CONF_FILEPATH, "")
+        slot_idx_list = self._get_slot_num_list(service)
+
+        if slot_idx_list is not None:
+            LOGGER.warning(
+                "print_file_udisk: ACE slot mapping for USB files is built from the "
+                "spools currently loaded in the requested slots, not from the file "
+                "itself (unlike cloud prints, slot count/order can't be validated "
+                "against the gcode). Make sure slot order matches what the file expects."
+            )
+
+        await printer.print_udisk_file(
+            file_name=file_name,
+            file_path=file_path,
+            slot_index_list=slot_idx_list,
+        )
+
+
 class BaseDeletePrinterFile(AnycubicCloudServiceCall):
     """ Base for printer file deletions """
 
@@ -889,6 +961,97 @@ class SetPrinterLanIp(AnycubicCloudServiceCall):
         LOGGER.debug("set_printer_lan_ip: updated LAN IP to '%s'", lan_ip)
 
 
+class MigrateEntityIds(AnycubicCloudServiceCall):
+    """Rename existing entity_ids to the stable, language-independent slug.
+
+    New entities already get a stable English object_id (see
+    AnycubicCloudEntity), but that only applies at first registration.
+    Entities registered before that (or while HA ran in a non-English
+    language) can still carry a localized entity_id. This lets a user
+    opt in to renaming those, without touching entities that already
+    match or that belong to another integration.
+    """
+
+    schema = vol.Schema({
+        vol.Required(ATTR_CONFIG_ENTRY): selector.ConfigEntrySelector(
+            {"integration": DOMAIN}
+        ),
+        vol.Optional(CONF_DRY_RUN, default=True): cv.boolean,
+    })
+
+    async def async_call_service(self, service: ServiceCall) -> None:
+        """Execute service call."""
+        coordinator = self._get_coordinator(service)
+        dry_run = bool(service.data.get(CONF_DRY_RUN, True))
+
+        entity_registry = er.async_get(self.hass)
+        device_registry = dr.async_get(self.hass)
+
+        entries = er.async_entries_for_config_entry(
+            entity_registry, coordinator.entry.entry_id
+        )
+
+        renamed = 0
+        skipped = 0
+
+        for entry in entries:
+            if entry.platform != DOMAIN or "-" not in entry.unique_id:
+                continue
+
+            if entry.device_id is None:
+                continue
+
+            device = device_registry.async_get(entry.device_id)
+            device_name = device.name_by_user or device.name if device else None
+
+            if not device_name:
+                continue
+
+            entity_key = entry.unique_id.split("-", 1)[1]
+            desired_entity_id = f"{entry.domain}.{slug_for_printer_entity(device_name, entity_key)}"
+
+            if desired_entity_id == entry.entity_id:
+                continue
+
+            existing = entity_registry.async_get(desired_entity_id)
+            if existing is not None and existing.unique_id != entry.unique_id:
+                LOGGER.warning(
+                    "migrate_entity_ids: skipping %s -> %s, target entity_id is already "
+                    "in use by a different entity.",
+                    entry.entity_id,
+                    desired_entity_id,
+                )
+                skipped += 1
+                continue
+
+            if dry_run:
+                LOGGER.warning(
+                    "migrate_entity_ids (dry_run): would rename %s -> %s",
+                    entry.entity_id,
+                    desired_entity_id,
+                )
+            else:
+                entity_registry.async_update_entity(
+                    entry.entity_id, new_entity_id=desired_entity_id
+                )
+                LOGGER.warning(
+                    "migrate_entity_ids: renamed %s -> %s",
+                    entry.entity_id,
+                    desired_entity_id,
+                )
+
+            renamed += 1
+
+        LOGGER.warning(
+            "migrate_entity_ids: %s %d entit%s (dry_run=%s), %d skipped due to collisions.",
+            "would rename" if dry_run else "renamed",
+            renamed,
+            "y" if renamed == 1 else "ies",
+            dry_run,
+            skipped,
+        )
+
+
 SERVICES = (
     ("multi_color_box_set_slot_pla", MultiColorBoxSetSlotPla),
     ("multi_color_box_set_slot_petg", MultiColorBoxSetSlotPetg),
@@ -903,6 +1066,8 @@ SERVICES = (
     ("multi_color_box_filament_retract", MultiColorBoxFilamentRetract),
     ("print_and_upload_save_in_cloud", PrintAndUploadSaveInCloud),
     ("print_and_upload_no_cloud_save", PrintAndUploadNoCloudSave),
+    ("print_file_local", PrintFileLocal),
+    ("print_file_udisk", PrintFileUdisk),
     ("delete_file_local", DeleteFileLocal),
     ("delete_file_udisk", DeleteFileUdisk),
     ("delete_file_cloud", DeleteFileCloud),
@@ -917,4 +1082,5 @@ SERVICES = (
     ("change_print_off_time", ChangePrintOffTime),
     ("change_print_on_time", ChangePrintOnTime),
     ("set_printer_lan_ip", SetPrinterLanIp),
+    ("migrate_entity_ids", MigrateEntityIds),
 )

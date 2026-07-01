@@ -15,13 +15,21 @@ from homeassistant.config_entries import (
     OptionsFlow,
 )
 from homeassistant.core import callback
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
-from homeassistant.helpers.selector import BooleanSelector, ObjectSelector
+from homeassistant.helpers.selector import (
+    BooleanSelector,
+    EntitySelector,
+    EntitySelectorConfig,
+    ObjectSelector,
+)
 from homeassistant.helpers.storage import Store
+from homeassistant.util import slugify
 
 from .anycubic_cloud_api.anycubic_api import AnycubicMQTTAPI as AnycubicAPI
 from .anycubic_cloud_api.models.auth import AnycubicAuthMode
 from .const import (
+    CONF_CAMERA_ENTITY_MAP,
     CONF_CARD_CONFIG,
     CONF_DEBUG_API_CALLS,
     CONF_DEBUG_DEPRECATED,
@@ -560,25 +568,72 @@ class AnycubicCloudOptionsFlowHandler(OptionsFlow):
             errors={},
         )
 
+    def _camera_map_fields(self) -> dict[str, str]:
+        """Map a per-printer form field name to that printer's HA device_id.
+
+        The built-in panel routes per printer using the HA device_id (see
+        `selectedPrinterID` in the frontend), so that's what the camera
+        mapping needs to be keyed by. Field names are derived from the
+        device name so the form is readable; a numeric suffix is added
+        on collision (e.g. two printers with the same name).
+        """
+        device_registry = dr.async_get(self.hass)
+        devices = dr.async_entries_for_config_entry(device_registry, self.entry.entry_id)
+
+        field_map: dict[str, str] = {}
+        used_slugs: set[str] = set()
+
+        for device in devices:
+            base_slug = slugify(device.name_by_user or device.name or device.id)
+            slug = base_slug
+            suffix = 2
+            while slug in used_slugs:
+                slug = f"{base_slug}_{suffix}"
+                suffix += 1
+            used_slugs.add(slug)
+            field_map[f"camera_entity_id_{slug}"] = device.id
+
+        return field_map
+
     async def async_step_camera(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Manage camera options (local LAN IP for Kobra X and similar)."""
+        """Manage camera options (local LAN IP + per-printer camera entity mapping)."""
+        camera_fields = self._camera_map_fields()
+
         if user_input is not None:
             # Normalize: strip whitespace, store empty string as absent
             lan_ip = user_input.get(CONF_PRINTER_LAN_IP, "").strip()
-            user_input[CONF_PRINTER_LAN_IP] = lan_ip
-            return self.async_create_entry_with_existing_options(user_input)
+
+            camera_entity_map = dict(self.entry.options.get(CONF_CAMERA_ENTITY_MAP, {}))
+            for field_name, device_id in camera_fields.items():
+                entity_id = user_input.get(field_name)
+                if entity_id:
+                    camera_entity_map[device_id] = entity_id
+                else:
+                    camera_entity_map.pop(device_id, None)
+
+            return self.async_create_entry_with_existing_options({
+                CONF_PRINTER_LAN_IP: lan_ip,
+                CONF_CAMERA_ENTITY_MAP: camera_entity_map,
+            })
 
         default_lan_ip = self.entry.options.get(CONF_PRINTER_LAN_IP, "")
+        existing_camera_map = self.entry.options.get(CONF_CAMERA_ENTITY_MAP, {})
+
+        schema_dict: dict[Any, Any] = {
+            vol.Optional(
+                CONF_PRINTER_LAN_IP, default=default_lan_ip
+            ): cv.string,
+        }
+        for field_name, device_id in camera_fields.items():
+            schema_dict[vol.Optional(
+                field_name, default=existing_camera_map.get(device_id)
+            )] = EntitySelector(EntitySelectorConfig(domain="camera"))
 
         return self.async_show_form(
             step_id="camera",
-            data_schema=vol.Schema({
-                vol.Optional(
-                    CONF_PRINTER_LAN_IP, default=default_lan_ip
-                ): cv.string,
-            }),
+            data_schema=vol.Schema(schema_dict),
             errors={},
         )
 

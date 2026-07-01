@@ -2047,6 +2047,32 @@ class AnycubicPrinter:
 
         return sorted(ams_box_mapping, key=lambda x: x.paint_index)
 
+    def build_mapping_for_current_slots(
+        self,
+        slot_index_list: list[int],
+    ) -> list[AnycubicMaterialMapping]:
+        if not self._multi_color_box:
+            return list()
+
+        highest_box = max(slot_index_list) // 4
+
+        if self.connected_ace_units < highest_box + 1:
+            raise AnycubicAPIError(ErrorsGeneral.insufficent_ace_units.format(
+                highest_box + 1
+            ))
+
+        ams_box_mapping = list()
+
+        for mcb in self._multi_color_box:
+
+            ams_box_mapping.extend(
+                mcb.build_mapping_for_current_slots(
+                    slot_index_list=slot_index_list,
+                )
+            )
+
+        return sorted(ams_box_mapping, key=lambda x: x.spool_index)
+
     async def update_info_from_api(
         self,
         with_project: bool = True,
@@ -2076,6 +2102,53 @@ class AnycubicPrinter:
 
         return await self._api_parent._send_order_list_udisk_files(
             self,
+        )
+
+    def _build_ams_box_mapping_for_slot_list(
+        self,
+        slot_index_list: list[int] | None,
+    ) -> list[AnycubicMaterialMapping] | None:
+        if slot_index_list is not None and not self.primary_multi_color_box:
+            raise AnycubicAPIError(ErrorsGeneral.no_ace_for_slot_list)
+
+        if slot_index_list is None and self.primary_multi_color_box:
+            raise AnycubicAPIError(ErrorsGeneral.no_slot_list_for_ace)
+
+        if slot_index_list is None:
+            return None
+
+        return self.build_mapping_for_current_slots(
+            slot_index_list=slot_index_list,
+        )
+
+    async def print_local_file(
+        self,
+        file_name: str,
+        file_path: str = "",
+        slot_index_list: list[int] | None = None,
+    ) -> str | None:
+        ams_box_mapping = self._build_ams_box_mapping_for_slot_list(slot_index_list)
+
+        return await self._api_parent.print_local_file(
+            printer=self,
+            file_name=file_name,
+            file_path=file_path,
+            ams_box_mapping=ams_box_mapping,
+        )
+
+    async def print_udisk_file(
+        self,
+        file_name: str,
+        file_path: str = "",
+        slot_index_list: list[int] | None = None,
+    ) -> str | None:
+        ams_box_mapping = self._build_ams_box_mapping_for_slot_list(slot_index_list)
+
+        return await self._api_parent.print_udisk_file(
+            printer=self,
+            file_name=file_name,
+            file_path=file_path,
+            ams_box_mapping=ams_box_mapping,
         )
 
     async def delete_local_file(

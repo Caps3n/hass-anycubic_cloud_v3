@@ -4,6 +4,9 @@
 > Basiert auf dem Fork von [@ljschmitt](https://github.com/ljschmitt/hass-anycubic_cloud_v3), der wiederum auf [@WaresWichall](https://github.com/WaresWichall/hass-anycubic_cloud) aufbaut.  
 > Aktuell getestet mit **Kobra X** – Feedback willkommen!
 
+> 🗓️ **Update (01.07.2026):**  
+> Eigenständige Umsetzung dreier Funktionen, die es inzwischen auch im Basis-Fork von @ljschmitt gibt: **Datei-Direktdruck ohne Upload**, ein **`migrate_entity_ids`-Service** für stabile Entity-IDs sowie eine **Pro-Drucker-Kamera-Zuordnung** im Options-Flow.
+
 > 🗓️ **Ursprüngliches Update (11.10.2025):**  
 > Diese Version enthält die **integrierte `paho-mqtt` 2.x-Lösung** (Callback-API v1) – damit funktionieren **MQTT-Echtzeit-Updates** wieder.  
 > Voraussetzung: **Slicer Next (Windows)** und dessen **Access-Token** (einmalig auslesen, danach kein Windows nötig).  
@@ -17,6 +20,9 @@
 - GitHub Actions auf v4 aktualisiert
 - HA 2025.11+ Kompatibilität
 - **Kobra X Kamera-Support** via lokalem LAN-Stream (`http://{Drucker-IP}:18088/flv`)
+- **Datei-Direktdruck** ohne HA-Upload (`print_file_local` / `print_file_udisk`)
+- **`migrate_entity_ids`-Service** für stabile, englische Entity-IDs
+- **Pro-Drucker-Kamera-Zuordnung** im Options-Flow (z. B. für Rinkhals/Moonraker-Webcams)
 
 ---
 
@@ -28,6 +34,8 @@
 - [📷 Kamera (Kobra X & lokaler LAN-Stream)](#-kamera-kobra-x--lokaler-lan-stream)
 - [🖼️ Galerie](#-galerie)
 - [🧩 Features](#-features)
+- [🖨️ Datei-Direktdruck ohne Upload](#️-datei-direktdruck-ohne-upload)
+- [🆔 Stabile Entity-IDs & migrate_entity_ids](#-stabile-entity-ids--migrate_entity_ids)
 - [📦 Installation über HACS (empfohlen)](#-installation-über-hacs-empfohlen)
 - [🖐️ Manuelle Installation](#-manuelle-installation)
 - [🔐 Token auslesen (Slicer Next)](#-token-auslesen-slicer-next)
@@ -91,6 +99,16 @@ Danach streamt die Entität `camera.anycubic_kobra_x_camera` direkt über `http:
 
 > 💡 **Hinweis:** Drucker wie Kobra 2 / Kobra 3 verwenden weiterhin die Cloud-Kamera (Tencent IoT Video). Die LAN-IP wird nur als Fallback genutzt, wenn der Cloud-Token nicht verfügbar ist.
 
+### Pro-Drucker-Kamera-Zuordnung (z. B. Rinkhals/Moonraker-Webcam)
+
+Bei mehreren Druckern mit unterschiedlichen Kameraquellen kann zusätzlich pro Drucker eine beliebige Home-Assistant-`camera.*`-Entity zugeordnet werden — z. B. eine über die **MJPEG IP Camera**-Integration eingebundene Rinkhals/Moonraker-Webcam. Diese ersetzt dann die Kamera nur für den jeweiligen Drucker in der Nebenansicht des eingebauten Panels.
+
+1. **Einstellungen → Geräte & Dienste → Anycubic → Konfigurieren → Kamera‑Einstellungen**
+2. Für jeden konfigurierten Drucker steht ein eigenes Auswahlfeld für eine HA-Kamera-Entity zur Verfügung
+3. Feld leer lassen, um bei diesem Drucker weiter die Standardkamera (LAN-Stream/Cloud) zu verwenden
+
+Die Zuordnung erfolgt intern über die HA-Geräte-ID des Druckers (nicht die Anycubic-Drucker-ID), sodass keine manuelle YAML-Konfiguration nötig ist.
+
 ---
 
 ## 🖼️ Galerie
@@ -115,6 +133,38 @@ Danach streamt die Entität `camera.anycubic_kobra_x_camera` direkt über `http:
 - Frontend-Panel mit Status + Dateimanager
 - Spulen-Trocknung & Materialmanagement (ACE)
 - Konfigurierbarer MQTT-Modus („nur beim Drucken“, dauerhaft, deaktiviert)
+
+---
+
+## 🖨️ Datei-Direktdruck ohne Upload
+
+Die Services `print_file_local` und `print_file_udisk` starten eine bereits auf dem Drucker- bzw. USB-Speicher vorhandene Datei, ohne sie vorher über Home Assistant hochzuladen.
+
+**Aufruf:** Entwicklerwerkzeuge → Dienste → `anycubic_ha_integration.print_file_local` bzw. `print_file_udisk`
+
+| Feld | Pflicht | Beschreibung |
+|---|---|---|
+| `config_entry` / `device_id` / `printer_id` | ja | wie bei den anderen Services |
+| `filename` | ja | vollständiger Dateiname (mit Endung) wie in der Dateiliste angezeigt |
+| `filepath` | nein | Unterordner, falls die Datei nicht im Root liegt |
+| `slot_number` | nein | ACE-Slotliste, z. B. `[1, 2]` |
+
+> ⚠️ **ACE-Hinweis:** Anders als beim Cloud-Druck kann die Slotliste hier **nicht** gegen die tatsächliche Farbanzahl der Datei geprüft werden — die Anycubic-API liefert für Dateien auf Drucker-/USB-Speicher keine Material-Metadaten. Die Zuordnung wird stattdessen aus den **aktuell in den angegebenen Slots geladenen Spulen** gebaut (Farbe/Material der Spule, die gerade steckt). Die Slot-Reihenfolge muss also manuell zur Farbreihenfolge der Datei passen — sonst druckt der Drucker mit der falschen Farbe.
+
+---
+
+## 🆔 Stabile Entity-IDs & migrate_entity_ids
+
+Neu angelegte Entities dieser Integration bekommen ab dieser Version eine **stabile, englische Entity-ID** vorgeschlagen (z. B. `sensor.kobra_x_curr_nozzle_temp`), unabhängig von der eingestellten HA-Sprache. Das verhindert, dass bei deutschsprachigem HA aus übersetzten Anzeigenamen zufällige deutsche Entity-IDs entstehen, die mit Dashboards/Automationen kollidieren können.
+
+**Bereits bestehende** Entity-IDs werden dadurch **nicht** automatisch verändert. Wer vorhandene Entity-IDs auf das neue, stabile Format umstellen möchte, kann den Service `anycubic_ha_integration.migrate_entity_ids` nutzen:
+
+1. Entwicklerwerkzeuge → Dienste → `anycubic_ha_integration.migrate_entity_ids`
+2. Zuerst mit `dry_run: true` (Standard) ausführen und die geplanten Umbenennungen im HA-Log prüfen
+3. Erst wenn die geplanten Änderungen passen, erneut mit `dry_run: false` ausführen
+4. Danach eigene Dashboards, Karten, Automationen und Skripte auf die neuen Entity-IDs prüfen
+
+Der Service benennt ausschließlich Entity-Registry-Einträge dieser Integration um; Kollisionen mit bereits belegten Entity-IDs werden übersprungen und geloggt.
 
 ---
 

@@ -5,6 +5,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
 from .const import (
+    CONF_CAMERA_ENTITY_MAP,
     CONF_CARD_CONFIG,
     COORDINATOR,
     DOMAIN,
@@ -41,7 +42,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # register panel
     await async_register_panel(
         hass,
-        entry.options.get(CONF_CARD_CONFIG)
+        entry.options.get(CONF_CARD_CONFIG),
+        entry.options.get(CONF_CAMERA_ENTITY_MAP),
     )
 
     return True

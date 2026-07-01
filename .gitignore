@@ -1,9 +1,9 @@
 .DS_Store
 __pycache__
-custom_components/anycubic_cloud/frontend_panel/node_modules/
-custom_components/anycubic_cloud/scripts/*.cache
-custom_components/anycubic_cloud/scripts/*.json
-custom_components/anycubic_cloud/scripts/*.token
-custom_components/anycubic_cloud/scripts/anycubic_credentials.py
+custom_components/anycubic_ha_integration/frontend_panel/node_modules/
+custom_components/anycubic_ha_integration/scripts/*.cache
+custom_components/anycubic_ha_integration/scripts/*.json
+custom_components/anycubic_ha_integration/scripts/*.token
+custom_components/anycubic_ha_integration/scripts/anycubic_credentials.py
 debug_dump.json
 test_api

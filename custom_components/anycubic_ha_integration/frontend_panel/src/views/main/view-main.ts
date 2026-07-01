@@ -309,6 +309,13 @@ export class AnycubicViewMain extends LitElement {
       : null;
   }
 
+  private _resolvedCameraEntityId(): string | undefined {
+    const perPrinter = this.selectedPrinterID
+      ? this.panel.config.cameraEntityIds?.[this.selectedPrinterID]
+      : undefined;
+    return perPrinter ?? this.panel.config.cameraEntityId;
+  }
+
   render(): LitTemplateResult {
     return html`
       <printer-card elevation="2">
@@ -323,7 +330,7 @@ export class AnycubicViewMain extends LitElement {
           .temperatureUnit=${this.panel.config.temperatureUnit}
           .lightEntityId=${this.panel.config.lightEntityId}
           .powerEntityId=${this.panel.config.powerEntityId}
-          .cameraEntityId=${this.panel.config.cameraEntityId}
+          .cameraEntityId=${this._resolvedCameraEntityId()}
           .monitoredStats=${this.panel.config.monitoredStats ??
           this.monitoredStats}
           .scaleFactor=${this.panel.config.scaleFactor}
