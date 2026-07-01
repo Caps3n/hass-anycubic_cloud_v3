@@ -4,7 +4,7 @@
 > Basiert auf dem Fork von [@ljschmitt](https://github.com/ljschmitt/hass-anycubic_cloud_v3), der wiederum auf [@WaresWichall](https://github.com/WaresWichall/hass-anycubic_cloud) aufbaut.  
 > Aktuell getestet mit **Kobra X** – Feedback willkommen!
 
-> 🗓️ **Update (01.07.2026):**  
+> 🗓️ **Version 0.0.74 – „Direktdruck & Kamera-Mapping" (01.07.2026):**  
 > Eigenständige Umsetzung dreier Funktionen, die es inzwischen auch im Basis-Fork von @ljschmitt gibt: **Datei-Direktdruck ohne Upload**, ein **`migrate_entity_ids`-Service** für stabile Entity-IDs sowie eine **Pro-Drucker-Kamera-Zuordnung** im Options-Flow.
 
 > 🗓️ **Ursprüngliches Update (11.10.2025):**  
