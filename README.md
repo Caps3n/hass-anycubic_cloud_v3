@@ -208,6 +208,8 @@ Der Service benennt ausschließlich Entity-Registry-Einträge dieser Integration
 ## 🔐 Token auslesen (Slicer Next)
 
 > ⚠️ **Ab Slicer Next 1.4.1.2** speichert der Slicer den Access-Token **nicht mehr im Klartext** in `AnycubicSlicerNext.conf`. Nutze dafür die Debug-Log-Methode unten (Methode A). Die alte `.conf`-Methode (Methode B) funktioniert nur noch bei älteren Slicer-Versionen.
+>
+> ⚠️ **Bekanntes Problem mit neuerer Drucker-Firmware/Slicer Next (ab ca. September 2026, z. B. Firmware 2.0.2.2):** Bei einigen Nutzern liefert Methode A keinen brauchbaren Token mehr – im `debug_*.log` steht nur noch der `id_token` von `makeronline.com` (SSO-Login, funktioniert **nicht** für MQTT), der neuere `mach_mqtt_*.log`-Client schreibt gar keine Zugangsdaten mehr ins Log, und der Token aus `MainApp_*.log` (`CloudMqttClient.cpp`) wird vom Anycubic-Server als ungültig abgelehnt. Auch ein Netzwerk-Mitschnitt (z. B. mit Fiddler) schlägt fehl, da die App per Certificate Pinning abgesicherte Verbindungen ablehnt. In diesem Fall bleibt aktuell nur der **Web-Login-Modus** (siehe unten) als funktionierender Weg – dieser liefert alle Daten zuverlässig per Cloud-Polling (~1 Minute Verzögerung), nur eben nicht in MQTT-Echtzeit. Falls du einen Weg findest, den echten Token bei neuerer Firmware auszulesen, gerne per Issue melden!
 
 **Methode A – Debug-Log (Slicer Next 1.4.1.2+, empfohlen):**
 
