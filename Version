@@ -9,3 +9,4 @@ Version: 0.0.62 20260427 - Fork by Caps3n: GitHub Actions v4, loggers-Fix, HA 20
 Version: 0.0.74 20260701 - "Direktdruck & Kamera-Mapping": Datei-Direktdruck (print_file_local/udisk), migrate_entity_ids Service, Pro-Drucker-Kamera-Zuordnung im Options-Flow
 Version: 0.0.75 20260909 - "Firmware-/Slicer-Kompatibilitaet": robusteres Slicer-Next-Token-Parsing, neue MQTT-Report-Typen (video/buried/info/hardwareProfile/aiSettings/videoThumbnailList/list_mode/3MF-Metadaten), Zusatzluefter-/Gehaeuseluefter-Sensoren, Dual-ACE-Partial-Update-Fix, Kamera-/Gehaeuselicht-Entity
 Version: 0.0.76 20260909 - Fix: feed_status in ACE-Box-Antwort ist optional (KeyError beim Laden der Druckerinfo ohne angeschlossene ACE-Box wurde faelschlich als Authentifizierungsfehler gemeldet)
+Version: 0.0.77 20260909 - Erzwungener Versions-Bump, damit HACS den 0.0.76-Fix zuverlaessig als Update erkennt

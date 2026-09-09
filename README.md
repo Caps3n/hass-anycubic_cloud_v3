@@ -4,6 +4,8 @@
 > Basiert auf dem Fork von [@ljschmitt](https://github.com/ljschmitt/hass-anycubic_cloud_v3), der wiederum auf [@WaresWichall](https://github.com/WaresWichall/hass-anycubic_cloud) aufbaut.  
 > Aktuell getestet mit **Kobra X** – Feedback willkommen!
 
+> 🗓️ **Version 0.0.77 (09.09.2026):** Reiner Versions-Bump, damit HACS das Update zuverlässig auf allen Installationen anzeigt.
+
 > 🗓️ **Version 0.0.76 (09.09.2026):**  
 > Fix: `feed_status` in der ACE-Box-Antwort ist jetzt optional. Drucker ohne angeschlossene ACE-Box (z. B. Kobra X ohne Multi-Color-Box) lieferten dieses Feld nicht mehr mit, was zu einem `KeyError` beim Laden der Druckerinfo führte – der fälschlich als „Authentifizierung fehlgeschlagen" angezeigt wurde, obwohl der Cloud-Login selbst erfolgreich war.
 
