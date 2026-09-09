@@ -4,6 +4,9 @@
 > Basiert auf dem Fork von [@ljschmitt](https://github.com/ljschmitt/hass-anycubic_cloud_v3), der wiederum auf [@WaresWichall](https://github.com/WaresWichall/hass-anycubic_cloud) aufbaut.  
 > Aktuell getestet mit **Kobra X** – Feedback willkommen!
 
+> 🗓️ **Version 0.0.75 – „Firmware-/Slicer-Kompatibilität" (09.09.2026):**  
+> Anpassungen an aktualisierte Anycubic-Drucker-Firmware und Slicer Next: robusteres Token-Auslesen (Slicer Next 1.4.1.2+ speichert den Token nicht mehr im Klartext), Unterstützung neuer MQTT-Report-Typen (Startup-/Video-/Telemetrie-Reports, Datei-Listen-Modus, 3MF-/Slicer-Metadaten), zusätzliche Zusatzlüfter-/Gehäuselüfter-Sensoren, ein Fix für Dual-ACE-Teil-Updates sowie eine neue Kamera-/Gehäuselicht-Entity.
+
 > 🗓️ **Version 0.0.74 – „Direktdruck & Kamera-Mapping" (01.07.2026):**  
 > Eigenständige Umsetzung dreier Funktionen, die es inzwischen auch im Basis-Fork von @ljschmitt gibt: **Datei-Direktdruck ohne Upload**, ein **`migrate_entity_ids`-Service** für stabile Entity-IDs sowie eine **Pro-Drucker-Kamera-Zuordnung** im Options-Flow.
 
@@ -133,6 +136,8 @@ Die Zuordnung erfolgt intern über die HA-Geräte-ID des Druckers (nicht die Any
 - Frontend-Panel mit Status + Dateimanager
 - Spulen-Trocknung & Materialmanagement (ACE)
 - Konfigurierbarer MQTT-Modus („nur beim Drucken“, dauerhaft, deaktiviert)
+- Kamera-/Gehäuselicht-Entity (Ein/Aus)
+- Zusatzlüfter-/Gehäuselüfter-Sensoren (falls vom Drucker gemeldet)
 
 ---
 
@@ -197,16 +202,32 @@ Der Service benennt ausschließlich Entity-Registry-Einträge dieser Integration
 
 ## 🔐 Token auslesen (Slicer Next)
 
-1. **Slicer Next starten → einloggen → schließen**
-2. Öffne:  
+> ⚠️ **Ab Slicer Next 1.4.1.2** speichert der Slicer den Access-Token **nicht mehr im Klartext** in `AnycubicSlicerNext.conf`. Nutze dafür die Debug-Log-Methode unten (Methode A). Die alte `.conf`-Methode (Methode B) funktioniert nur noch bei älteren Slicer-Versionen.
+
+**Methode A – Debug-Log (Slicer Next 1.4.1.2+, empfohlen):**
+
+1. **Slicer Next starten → einloggen**
+2. PowerShell-Befehl (kopiert den neuesten Access-Token aus dem aktuellen Log in die Zwischenablage):
+   ```powershell
+   $log = Get-ChildItem "$env:AppData\AnycubicSlicerNext\log" -Filter "debug_*.log" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+   $token = Select-String -Path $log.FullName -Pattern 'accessToken = ([^,\s]+)' | Select-Object -Last 1
+   $token.Matches.Groups[1].Value | Set-Clipboard
+   ```
+3. In Integration einfügen → fertig
+
+**Methode B – `.conf`-Datei (nur ältere Slicer-Versionen mit Klartext-Token):**
+
+1. Öffne:  
    %AppData%\AnycubicSlicerNext\AnycubicSlicerNext.conf
-3. PowerShell-Befehl (kopiert Token in Zwischenablage):
+2. PowerShell-Befehl (kopiert Token in Zwischenablage):
    ```powershell
    $path = "$env:AppData\AnycubicSlicerNext\AnycubicSlicerNext.conf"; 
    (Select-String -Path $path -Pattern '"access_token"\s*:\s*"([^"]+)"').Matches.Groups[1].Value | Set-Clipboard
    ```
-4. In Integration einfügen → fertig  
+3. In Integration einfügen → fertig  
    (optional Token in Datei danach leeren: `"access_token": ""`)
+
+> 💡 Beide Methoden funktionieren auch, wenn du versehentlich die ganze Log-/Konfig-Zeile statt nur des Tokens kopierst und einfügst (z. B. `accessToken = eyJ...` oder `{"access_token": "eyJ..."}`) – die Integration extrahiert den eigentlichen Token-Wert automatisch.
 
 ---
 

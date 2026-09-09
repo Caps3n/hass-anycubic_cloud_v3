@@ -7,3 +7,4 @@ Version: 0.0.61 20251011 - paho-mqtt 2.x Support, MQTT-Fallback, Bugfixes (ljsch
 Version: 0.0.62 20260427 - Fork by Caps3n: GitHub Actions v4, loggers-Fix, HA 2025.11+ Kompatibilitaet
 ...
 Version: 0.0.74 20260701 - "Direktdruck & Kamera-Mapping": Datei-Direktdruck (print_file_local/udisk), migrate_entity_ids Service, Pro-Drucker-Kamera-Zuordnung im Options-Flow
+Version: 0.0.75 20260909 - "Firmware-/Slicer-Kompatibilitaet": robusteres Slicer-Next-Token-Parsing, neue MQTT-Report-Typen (video/buried/info/hardwareProfile/aiSettings/videoThumbnailList/list_mode/3MF-Metadaten), Zusatzluefter-/Gehaeuseluefter-Sensoren, Dual-ACE-Partial-Update-Fix, Kamera-/Gehaeuselicht-Entity

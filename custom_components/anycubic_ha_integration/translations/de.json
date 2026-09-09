@@ -208,6 +208,11 @@
         "name": "Auftragsvorschau"
       }
     },
+    "light": {
+      "camera_light_on": {
+        "name": "Kamera-Licht"
+      }
+    },
     "sensor": {
       "current_status": {
         "name": "Aktueller Status"
@@ -286,6 +291,12 @@
       },
       "fan_speed_pct": {
         "name": "Lüftergeschwindigkeit (%)"
+      },
+      "aux_fan_speed_pct": {
+        "name": "Zusatzlüfter-Geschwindigkeit (%)"
+      },
+      "box_fan_level": {
+        "name": "Gehäuselüfter-Stufe"
       },
       "file_list_local": {
         "name": "Dateiliste (Lokal)"

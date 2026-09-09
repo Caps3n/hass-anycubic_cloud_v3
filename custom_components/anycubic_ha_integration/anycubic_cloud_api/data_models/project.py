@@ -21,13 +21,13 @@ from ..helpers.helpers import (
     timedelta_to_dhm_string,
     timedelta_to_total_minutes,
 )
+from .consumable import AnycubicConsumableData
 from .print_speed_mode import AnycubicPrintSpeedMode
 
 if TYPE_CHECKING:
     from datetime import timedelta
 
     from ..anycubic_api import AnycubicAPI
-    from .consumable import AnycubicConsumableData
     from .printing_settings import AnycubicPrintingSettings
 
 
@@ -633,6 +633,8 @@ class AnycubicProject:
 
         if 'filename' in mqtt_data:
             self.set_filename(mqtt_data['filename'])
+        elif 'display_filename' in mqtt_data:
+            self.set_filename(mqtt_data['display_filename'])
 
         if 'print_time' in mqtt_data:
             self._print_time = int(mqtt_data['print_time'])
@@ -648,6 +650,26 @@ class AnycubicProject:
                 'supplies_usage',
                 int(mqtt_data['supplies_usage'])
             )
+
+        # Newer firmware/slicer versions can send 3MF/slicer metadata
+        # alongside print status reports. Informational only for now, but
+        # consuming them avoids repeated "unhandled MQTT data" warnings.
+        for metadata_key in (
+            'origin3mf',
+            'resume_needs_unpack',
+            'slicer',
+            'source_type',
+            'temp_dir',
+            'temp_gcode',
+        ):
+            mqtt_data.get(metadata_key)
+
+        source_info = mqtt_data.get('source_info')
+        if isinstance(source_info, AnycubicConsumableData):
+            source_info.force_empty()
+            # Re-access now that it's empty so the parent pops the
+            # (now-consumed) key too, instead of leaving it dangling.
+            mqtt_data.get('source_info')
 
     def update_with_mqtt_download_status_data(
         self,

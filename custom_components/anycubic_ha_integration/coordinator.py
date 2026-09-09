@@ -283,6 +283,8 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "print_speed_pct": printer.latest_project_print_speed_pct,
             "job_z_thick": printer.latest_project_z_thick,
             "fan_speed_pct": printer.latest_project_fan_speed_pct,
+            "aux_fan_speed_pct": printer.aux_fan_speed_pct,
+            "box_fan_level": printer.box_fan_level,
             "job_model_height": printer.latest_project_print_model_height,
             "job_anti_alias_count": printer.latest_project_print_anti_alias_count,
             "job_on_time": printer.latest_project_print_on_time,
@@ -294,6 +296,7 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "job_z_down_speed": printer.latest_project_print_z_down_speed,
             "manual_mqtt_connection_enabled": self._mqtt_manually_connected,
             "mqtt_connection_active": self.anycubic_api.mqtt_is_started,
+            "camera_light_on": printer.camera_light_on,
         }
 
         attributes = {
@@ -1067,6 +1070,26 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         else:
             return
 
+        await self.force_state_update()
+
+    async def light_turn_on_event(self, printer_id: int) -> None:
+        printer = self.get_printer_for_id(printer_id)
+
+        if not printer:
+            return
+
+        await self._connect_mqtt_for_action_response()
+        await printer.set_camera_light(light_on=True)
+        await self.force_state_update()
+
+    async def light_turn_off_event(self, printer_id: int) -> None:
+        printer = self.get_printer_for_id(printer_id)
+
+        if not printer:
+            return
+
+        await self._connect_mqtt_for_action_response()
+        await printer.set_camera_light(light_on=False)
         await self.force_state_update()
 
     async def switch_off_event(

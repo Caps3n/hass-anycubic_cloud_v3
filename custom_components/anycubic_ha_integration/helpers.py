@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from enum import IntEnum
 from types import MappingProxyType
@@ -265,12 +266,45 @@ def state_string_loaded(state: Any) -> str:
 
 REGEX_NOQUOTE_STRING = re.compile(r"^['\"]?([^'\"]+)['\"]?$")
 
+# Slicer Next 1.4.1.2+ no longer stores the access token as plain text in
+# AnycubicSlicerNext.conf; users now copy a line straight out of its debug
+# log instead, e.g. `accessToken = eyJhbGci...` or a JSON blob such as
+# `{"access_token": "eyJhbGci..."}`. This pulls the actual token value out
+# of either shape (or a bare token) so users don't have to hand-clean it.
+TOKEN_KEY_NAMES = ("access_token", "accessToken", "id_token", "token")
+REGEX_TOKEN_FROM_TEXT = re.compile(
+    r"(?:" + "|".join(TOKEN_KEY_NAMES) + r")['\"]?\s*[=:]\s*['\"]?([^'\"\s,}]+)",
+)
+
 
 def remove_quotes_from_string(input_string: str) -> str:
-    matches = REGEX_NOQUOTE_STRING.findall(input_string)
+    stripped = input_string.strip()
+
+    if not stripped:
+        raise TypeError("Empty token string.")
+
+    try:
+        decoded_json: Any = json.loads(stripped)
+    except json.JSONDecodeError:
+        decoded_json = None
+
+    if isinstance(decoded_json, str) and decoded_json.strip():
+        return decoded_json.strip()
+
+    if isinstance(decoded_json, dict):
+        for key in TOKEN_KEY_NAMES:
+            value = decoded_json.get(key)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+
+    log_line_match = REGEX_TOKEN_FROM_TEXT.search(stripped)
+    if log_line_match:
+        return log_line_match.group(1).strip()
+
+    matches = REGEX_NOQUOTE_STRING.findall(stripped)
 
     if len(matches) == 1:
-        return str(matches[0])
+        return str(matches[0]).strip()
 
     raise TypeError("Unexpected quotes in string.")
 

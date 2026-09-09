@@ -208,6 +208,11 @@
         "name": "Job Preview"
       }
     },
+    "light": {
+      "camera_light_on": {
+        "name": "Camera Light"
+      }
+    },
     "sensor": {
       "current_status": {
         "name": "Current Status"
@@ -286,6 +291,12 @@
       },
       "fan_speed_pct": {
         "name": "Fan Speed %"
+      },
+      "aux_fan_speed_pct": {
+        "name": "Aux Fan Speed %"
+      },
+      "box_fan_level": {
+        "name": "Box Fan Level"
       },
       "file_list_local": {
         "name": "File List (Local)"
