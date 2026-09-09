@@ -4,6 +4,9 @@
 > Basiert auf dem Fork von [@ljschmitt](https://github.com/ljschmitt/hass-anycubic_cloud_v3), der wiederum auf [@WaresWichall](https://github.com/WaresWichall/hass-anycubic_cloud) aufbaut.  
 > Aktuell getestet mit **Kobra X** – Feedback willkommen!
 
+> 🗓️ **Version 0.0.76 (09.09.2026):**  
+> Fix: `feed_status` in der ACE-Box-Antwort ist jetzt optional. Drucker ohne angeschlossene ACE-Box (z. B. Kobra X ohne Multi-Color-Box) lieferten dieses Feld nicht mehr mit, was zu einem `KeyError` beim Laden der Druckerinfo führte – der fälschlich als „Authentifizierung fehlgeschlagen" angezeigt wurde, obwohl der Cloud-Login selbst erfolgreich war.
+
 > 🗓️ **Version 0.0.75 – „Firmware-/Slicer-Kompatibilität" (09.09.2026):**  
 > Anpassungen an aktualisierte Anycubic-Drucker-Firmware und Slicer Next: robusteres Token-Auslesen (Slicer Next 1.4.1.2+ speichert den Token nicht mehr im Klartext), Unterstützung neuer MQTT-Report-Typen (Startup-/Video-/Telemetrie-Reports, Datei-Listen-Modus, 3MF-/Slicer-Metadaten), zusätzliche Zusatzlüfter-/Gehäuselüfter-Sensoren, ein Fix für Dual-ACE-Teil-Updates sowie eine neue Kamera-/Gehäuselicht-Entity.
 
