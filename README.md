@@ -4,6 +4,8 @@
 > Basiert auf dem Fork von [@ljschmitt](https://github.com/ljschmitt/hass-anycubic_cloud_v3), der wiederum auf [@WaresWichall](https://github.com/WaresWichall/hass-anycubic_cloud) aufbaut.  
 > Aktuell getestet mit **Kobra X** – Feedback willkommen!
 
+> 🗓️ **Version 0.0.79 (25.10.2026):** Korrekturen aus einem Code-Review von 0.0.78: Ein abgelaufener Token führt wieder zuverlässig zum Re-Auth-Dialog, die Datei-Vorschau belastet die Anycubic-Cloud beim Öffnen großer Dateilisten nicht mehr mit vielen parallelen Anfragen, und Vorschaubilder werden auch erkannt, wenn das Anycubic-CDN keinen Bild-Content-Type mitschickt.
+
 > 🗓️ **Version 0.0.78 (25.10.2026):**  
 > Eigenständige Umsetzung dreier Verbesserungen aus dem ljschmitt-Fork: **Datei-Vorschaubilder** für Lokal-/USB-Druckdateien (zeigt ein Vorschaubild aus einem passenden früheren Cloud-Druck, falls vorhanden), ein **Kobra-X-Material-Gestell-Fix** für `print_file_local`/`print_file_udisk` (das interne Material-Gestell des Kobra X wurde bei der Slot-Nummern-Umrechnung bisher nicht berücksichtigt – bitte Rückmeldung geben, falls Slot-Zuordnung noch falsch ist), sowie eine klarere Fehlermeldung beim Setup (fehlende, nicht sicherheitsrelevante API-Felder werden nicht mehr fälschlich als Anmeldefehler gemeldet). Außerdem ein eigenständig gefundener Bugfix: Die Frontend-Karte/das Panel riefen Services noch unter dem alten Domainnamen `anycubic_cloud` statt `anycubic_ha_integration` auf – dadurch schlugen Datei-löschen, Drucken sowie Spulen-/Druckeinstellungen über die eigene Oberfläche fehl.
 

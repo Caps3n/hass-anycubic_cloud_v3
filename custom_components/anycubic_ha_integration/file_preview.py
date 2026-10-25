@@ -21,7 +21,7 @@ def normalize_print_filename(filename: str) -> str:
 
 
 def find_preview_image_url(
-    projects: list["AnycubicProject"],
+    projects: list[AnycubicProject],
     printer_id: int,
     filename: str,
 ) -> str | None:

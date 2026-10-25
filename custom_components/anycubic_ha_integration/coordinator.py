@@ -724,6 +724,8 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         if self.entry.data.get(CONF_USER_TOKEN) is None:
             raise ConfigEntryAuthFailed("Authentication Token not found.")
 
+        authenticated = False
+
         try:
             # config = await store.async_load()
             cookie_jar = CookieJar(unsafe=True)
@@ -760,6 +762,8 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if not success:
                 raise ConfigEntryAuthFailed("Authentication failed. Check credentials.")
 
+            authenticated = True
+
             # Create config
             await store.async_save(self._anycubic_api.get_auth_config_dict())
 
@@ -777,9 +781,13 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             raise
 
         except KeyError as error:
-            # A missing field in the Cloud API response is a setup/parsing problem,
-            # not proof that the submitted credentials are invalid - don't send the
-            # user back to re-enter a token that already worked.
+            # Only once login has succeeded is a missing response field a parsing
+            # problem rather than a bad token - before that, keep the reauth flow.
+            if not authenticated:
+                raise ConfigEntryAuthFailed(
+                    f"Coordinator authentication failed with unknown Error. Check credentials {error}"
+                ) from error
+
             raise ConfigEntryError(
                 f"Unexpected response from Anycubic Cloud API (missing field: {error}). "
                 "This is not an authentication problem. Please file an issue."
