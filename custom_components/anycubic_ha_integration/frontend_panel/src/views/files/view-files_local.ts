@@ -17,6 +17,8 @@ import {
 
 @customElement("anycubic-view-files_local")
 export class AnycubicViewFilesLocal extends AnycubicViewFilesBase {
+  protected previewEnabled = true;
+
   protected willUpdate(changedProperties: PropertyValues<this>): void {
     super.willUpdate(changedProperties);
 

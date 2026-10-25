@@ -1300,6 +1300,13 @@ class AnycubicPrinter:
         return self._machine_name
 
     @property
+    def is_kobra_x(self) -> bool:
+        # The Kobra X ships with a 3-slot internal material rack in addition to
+        # any external ACE box(es); visible (1-based) material accesses 1-3 are
+        # the rack, access 4 onward are the first/next ACE box.
+        return self._machine_type == 20030 or self._machine_name == "Anycubic Kobra X"
+
+    @property
     def machine_img(self) -> str | None:
         return self._machine_img
 
@@ -2275,6 +2282,26 @@ class AnycubicPrinter:
         return await self._api_parent._send_order_list_udisk_files(
             self,
         )
+
+    def print_slot_numbers_to_indices(
+        self,
+        slot_number_list: list[int],
+    ) -> list[int]:
+        """Translate visible 1-based material accesses to protocol slot indices.
+
+        On the Kobra X, visible accesses 1-3 are the internal material rack and
+        access 4 onward are the first/next external ACE box, so a flat ``- 1``
+        (correct for every other printer) points at the wrong spool. This has
+        not been verified against a live Kobra X rack in this fork - please
+        report back if slot-based prints on a Kobra X pick the wrong material.
+        """
+        if self.is_kobra_x:
+            return [
+                slot_number - 5 if slot_number < 4 else slot_number - 4
+                for slot_number in slot_number_list
+            ]
+
+        return [slot_number - 1 for slot_number in slot_number_list]
 
     def _build_ams_box_mapping_for_slot_list(
         self,

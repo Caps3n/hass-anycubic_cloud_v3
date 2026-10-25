@@ -2,6 +2,7 @@ import { CSSResult, LitElement, PropertyValues, css, html, nothing } from "lit";
 import { property, state } from "lit/decorators.js";
 
 import { commonFilesStyle } from "./styles";
+import { platform } from "../../const";
 import { localize } from "../../../localize/localize";
 import {
   getPrinterEntities,
@@ -20,6 +21,10 @@ import {
   HomeAssistant,
   LitTemplateResult,
 } from "../../types";
+
+interface FilePreviewResult {
+  image: string | null;
+}
 
 export class AnycubicViewFilesBase extends LitElement {
   @property()
@@ -70,6 +75,16 @@ export class AnycubicViewFilesBase extends LitElement {
   @state()
   protected _httpResponse: boolean = false;
 
+  // Only local/USB file lists have no built-in preview image of their own;
+  // subclasses for those override this to opportunistically show a preview
+  // from a matching past cloud print of the same file.
+  protected previewEnabled: boolean = false;
+
+  @state()
+  private _previewImages = new Map<string, string | null>();
+
+  private _previewRequested = new Set<string>();
+
   protected willUpdate(changedProperties: PropertyValues<this>): void {
     super.willUpdate(changedProperties);
 
@@ -94,6 +109,11 @@ export class AnycubicViewFilesBase extends LitElement {
         this.printerEntities,
         this.printerEntityIdPart,
       );
+    }
+
+    if (changedProperties.has("selectedPrinterID")) {
+      this._previewImages = new Map();
+      this._previewRequested.clear();
     }
   }
 
@@ -122,6 +142,7 @@ export class AnycubicViewFilesBase extends LitElement {
             ? this._fileArray.map(
                 (fileInfo) => html`
                   <li class="file-info">
+                    ${this._renderPreview(fileInfo)}
                     <div class="file-name">${fileInfo.name}</div>
                     <button
                       class="file-delete-button"
@@ -161,6 +182,52 @@ export class AnycubicViewFilesBase extends LitElement {
 
   // eslint-disable-next-line no-empty-function
   deleteFile = (_ev: DomClickEvent<EvtTargFileInfo>): void => {};
+
+  private _renderPreview(
+    fileInfo: AnycubicFileLocal,
+  ): LitTemplateResult | typeof nothing {
+    if (!this.previewEnabled || !fileInfo.name) {
+      return nothing;
+    }
+
+    if (!this._previewImages.has(fileInfo.name)) {
+      this._fetchPreview(fileInfo.name);
+      return nothing;
+    }
+
+    const image = this._previewImages.get(fileInfo.name);
+
+    if (!image) {
+      return nothing;
+    }
+
+    return html`<img class="file-preview-thumb" src=${image} alt="" />`;
+  }
+
+  private _fetchPreview(filename: string): void {
+    if (this._previewRequested.has(filename) || !this.selectedPrinterDevice) {
+      return;
+    }
+
+    this._previewRequested.add(filename);
+
+    this.hass
+      .callWS<FilePreviewResult>({
+        type: `${platform}/file_preview`,
+        config_entry: this.selectedPrinterDevice.primary_config_entry,
+        device_id: this.selectedPrinterDevice.id,
+        filename,
+      })
+      .then((result) => {
+        this._previewImages = new Map(this._previewImages).set(
+          filename,
+          result.image,
+        );
+      })
+      .catch((_e: unknown) => {
+        this._previewImages = new Map(this._previewImages).set(filename, null);
+      });
+  }
 
   static get styles(): CSSResult {
     return css`

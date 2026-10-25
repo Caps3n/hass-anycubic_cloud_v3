@@ -49,6 +49,15 @@ export const commonFilesStyle: CSSResult = css`
     max-width: calc(100% - 58px);
   }
 
+  .file-preview-thumb {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 6px;
+  }
+
   .file-info:hover {
     background-color: #ccc3;
     border-color: #ccc9;

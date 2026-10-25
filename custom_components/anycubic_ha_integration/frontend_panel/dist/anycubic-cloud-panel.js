@@ -81,22 +81,22 @@
          */,
     {
       is: g,
-      defineProperty: b,
-      getOwnPropertyDescriptor: m,
+      defineProperty: m,
+      getOwnPropertyDescriptor: b,
       getOwnPropertyNames: v,
       getOwnPropertySymbols: y,
       getPrototypeOf: _
     } = Object,
     f = globalThis,
-    x = f.trustedTypes,
-    w = x ? x.emptyScript : "",
+    w = f.trustedTypes,
+    x = w ? w.emptyScript : "",
     E = f.reactiveElementPolyfillSupport,
     S = (t, e) => t,
     $ = {
       toAttribute(t, e) {
         switch (e) {
           case Boolean:
-            t = t ? w : null;
+            t = t ? x : null;
             break;
           case Object:
           case Array:
@@ -144,14 +144,14 @@
       if (e.state && (e.attribute = !1), this._$Ei(), this.elementProperties.set(t, e), !e.noAccessor) {
         const i = Symbol(),
           r = this.getPropertyDescriptor(t, i, e);
-        void 0 !== r && b(this.prototype, t, r);
+        void 0 !== r && m(this.prototype, t, r);
       }
     }
     static getPropertyDescriptor(t, e, i) {
       const {
         get: r,
         set: n
-      } = m(this.prototype, t) ?? {
+      } = b(this.prototype, t) ?? {
         get() {
           return this[e];
         },
@@ -355,11 +355,11 @@
     O = t => null === t || "object" != typeof t && "function" != typeof t,
     L = Array.isArray,
     U = t => L(t) || "function" == typeof t?.[Symbol.iterator],
-    z = "[ \t\n\f\r]",
-    R = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,
+    R = "[ \t\n\f\r]",
+    z = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,
     j = /-->/g,
     G = />/g,
-    V = RegExp(`>|${z}(?:([^\\s"'>=/]+)(${z}*=${z}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"),
+    V = RegExp(`>|${R}(?:([^\\s"'>=/]+)(${R}*=${R}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"),
     Y = /'/g,
     W = /"/g,
     X = /^(?:script|style|textarea|title)$/i,
@@ -381,16 +381,16 @@
       r = [];
     let n,
       s = 2 === e ? "<svg>" : "",
-      o = R;
+      o = z;
     for (let e = 0; e < i; e++) {
       const i = t[e];
       let a,
         l,
         h = -1,
         c = 0;
-      for (; c < i.length && (o.lastIndex = c, l = o.exec(i), null !== l);) c = o.lastIndex, o === R ? "!--" === l[1] ? o = j : void 0 !== l[1] ? o = G : void 0 !== l[2] ? (X.test(l[2]) && (n = RegExp("</" + l[2], "g")), o = V) : void 0 !== l[3] && (o = V) : o === V ? ">" === l[0] ? (o = n ?? R, h = -1) : void 0 === l[1] ? h = -2 : (h = o.lastIndex - l[2].length, a = l[1], o = void 0 === l[3] ? V : '"' === l[3] ? W : Y) : o === W || o === Y ? o = V : o === j || o === G ? o = R : (o = V, n = void 0);
+      for (; c < i.length && (o.lastIndex = c, l = o.exec(i), null !== l);) c = o.lastIndex, o === z ? "!--" === l[1] ? o = j : void 0 !== l[1] ? o = G : void 0 !== l[2] ? (X.test(l[2]) && (n = RegExp("</" + l[2], "g")), o = V) : void 0 !== l[3] && (o = V) : o === V ? ">" === l[0] ? (o = n ?? z, h = -1) : void 0 === l[1] ? h = -2 : (h = o.lastIndex - l[2].length, a = l[1], o = void 0 === l[3] ? V : '"' === l[3] ? W : Y) : o === W || o === Y ? o = V : o === j || o === G ? o = z : (o = V, n = void 0);
       const d = o === V && t[e + 1].startsWith("/>") ? " " : "";
-      s += o === R ? i + F : h >= 0 ? (r.push(a), i.slice(0, h) + M + i.slice(h) + k + d) : i + k + (-2 === h ? e : d);
+      s += o === z ? i + F : h >= 0 ? (r.push(a), i.slice(0, h) + M + i.slice(h) + k + d) : i + k + (-2 === h ? e : d);
     }
     return [tt(t, s + (t[i] || "<?>") + (2 === e ? "</svg>" : "")), r];
   };
@@ -697,7 +697,7 @@
        * Copyright 2017 Google LLC
        * SPDX-License-Identifier: BSD-3-Clause
        */
-  const bt = t => (e, i) => {
+  const mt = t => (e, i) => {
       void 0 !== i ? i.addInitializer(() => {
         customElements.define(t, e);
       }) : customElements.define(t, e);
@@ -707,14 +707,14 @@
          * Copyright 2017 Google LLC
          * SPDX-License-Identifier: BSD-3-Clause
          */,
-    mt = {
+    bt = {
       attribute: !0,
       type: String,
       converter: $,
       reflect: !1,
       hasChanged: P
     },
-    vt = (t = mt, e, i) => {
+    vt = (t = bt, e, i) => {
       const {
         kind: r,
         metadata: n
@@ -777,7 +777,7 @@
        * Copyright 2017 Google LLC
        * SPDX-License-Identifier: BSD-3-Clause
        */;
-  function xt(t, e) {
+  function wt(t, e) {
     return (i, r, n) => {
       const s = e => e.renderRoot?.querySelector(t) ?? null;
       if (e) {
@@ -809,7 +809,7 @@
       });
     };
   }
-  const wt = 6048e5,
+  const xt = 6048e5,
     Et = 864e5,
     St = 6e4,
     $t = 36e5,
@@ -904,11 +904,11 @@
     return !(!((e = t) instanceof Date || "object" == typeof e && "[object Date]" === Object.prototype.toString.call(e)) && "number" != typeof t || isNaN(+Tt(t)));
     var e;
   }
-  function zt(t, e) {
+  function Rt(t, e) {
     const i = t.getFullYear() - e.getFullYear() || t.getMonth() - e.getMonth() || t.getDate() - e.getDate() || t.getHours() - e.getHours() || t.getMinutes() - e.getMinutes() || t.getSeconds() - e.getSeconds() || t.getMilliseconds() - e.getMilliseconds();
     return i < 0 ? -1 : i > 0 ? 1 : i;
   }
-  function Rt(t) {
+  function zt(t) {
     return e => {
       const i = (t ? Math[t] : Math.trunc)(e);
       return 0 === i ? 0 : i;
@@ -1334,7 +1334,7 @@
           r = At(e?.in || t, 0);
         return r.setFullYear(i, 0, 4), r.setHours(0, 0, 0, 0), kt(r);
       }(i);
-    return Math.round(r / wt) + 1;
+    return Math.round(r / xt) + 1;
   }
   function re(t, e) {
     const i = Tt(t, e?.in),
@@ -1358,7 +1358,7 @@
           s = At(e?.in || t, 0);
         return s.setFullYear(n, 0, r), s.setHours(0, 0, 0, 0), Mt(s, e);
       }(i, e);
-    return Math.round(r / wt) + 1;
+    return Math.round(r / xt) + 1;
   }
   function se(t, e) {
     return (t < 0 ? "-" : "") + Math.abs(t).toString().padStart(e, "0");
@@ -1833,24 +1833,24 @@
         if (0 === r) return "Z";
         switch (e) {
           case "X":
-            return be(r);
+            return me(r);
           case "XXXX":
           case "XX":
-            return me(r);
+            return be(r);
           default:
-            return me(r, ":");
+            return be(r, ":");
         }
       },
       x: function (t, e, i) {
         const r = t.getTimezoneOffset();
         switch (e) {
           case "x":
-            return be(r);
+            return me(r);
           case "xxxx":
           case "xx":
-            return me(r);
+            return be(r);
           default:
-            return me(r, ":");
+            return be(r, ":");
         }
       },
       O: function (t, e, i) {
@@ -1861,7 +1861,7 @@
           case "OOO":
             return "GMT" + ge(r, ":");
           default:
-            return "GMT" + me(r, ":");
+            return "GMT" + be(r, ":");
         }
       },
       z: function (t, e, i) {
@@ -1872,7 +1872,7 @@
           case "zzz":
             return "GMT" + ge(r, ":");
           default:
-            return "GMT" + me(r, ":");
+            return "GMT" + be(r, ":");
         }
       },
       t: function (t, e, i) {
@@ -1889,13 +1889,13 @@
       s = r % 60;
     return 0 === s ? i + String(n) : i + String(n) + e + se(s, 2);
   }
-  function be(t, e) {
+  function me(t, e) {
     if (t % 60 == 0) {
       return (t > 0 ? "-" : "+") + se(Math.abs(t) / 60, 2);
     }
-    return me(t, e);
+    return be(t, e);
   }
-  function me(t, e = "") {
+  function be(t, e = "") {
     const i = t > 0 ? "-" : "+",
       r = Math.abs(t);
     return i + se(Math.trunc(r / 60), 2) + e + se(r % 60, 2);
@@ -1973,8 +1973,8 @@
       }
     },
     fe = /^D+$/,
-    xe = /^Y+$/,
-    we = ["D", "DD", "YY", "YYYY"];
+    we = /^Y+$/,
+    xe = ["D", "DD", "YY", "YYYY"];
   const Ee = /[yYQqMLwIdDecihHKkms]o|(\w)\1*|''|'(''|[^'])+('|$)|./g,
     Se = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g,
     $e = /^'([^]*?)'?$/,
@@ -2023,7 +2023,7 @@
       if (!r.isToken) return r.value;
       const s = r.value;
       (!i?.useAdditionalWeekYearTokens && function (t) {
-        return xe.test(t);
+        return we.test(t);
       }(s) || !i?.useAdditionalDayOfYearTokens && function (t) {
         return fe.test(t);
       }(s)) && function (t, e, i) {
@@ -2031,7 +2031,7 @@
           const r = "Y" === t[0] ? "years" : "days of the month";
           return `Use \`${t.toLowerCase()}\` instead of \`${t}\` (in \`${e}\`) for formatting ${r} to the input \`${i}\`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md`;
         }(t, e, i);
-        if (console.warn(r), we.includes(t)) throw new RangeError(r);
+        if (console.warn(r), xe.includes(t)) throw new RangeError(r);
       }(s, e, String(t));
       return (0, ue[s[0]])(a, s, n.localize, h);
     }).join("");
@@ -2064,10 +2064,10 @@
       }),
       h = function (t, e, i) {
         const [r, n] = Bt(i?.in, t, e),
-          s = zt(r, n),
+          s = Rt(r, n),
           o = Math.abs(Ot(r, n));
         r.setDate(r.getDate() - s * o);
-        const a = s * (o - Number(zt(r, n) === -s));
+        const a = s * (o - Number(Rt(r, n) === -s));
         return 0 === a ? 0 : a;
       }(r, l);
     h && (n.days = h);
@@ -2077,7 +2077,7 @@
       d = function (t, e, i) {
         const [r, n] = Bt(i?.in, t, e),
           s = (+r - +n) / $t;
-        return Rt(i?.roundingMethod)(s);
+        return zt(i?.roundingMethod)(s);
       }(r, c);
     d && (n.hours = d);
     const p = Ct(c, {
@@ -2085,12 +2085,12 @@
       }),
       u = function (t, e, i) {
         const r = jt(t, e) / St;
-        return Rt(i?.roundingMethod)(r);
+        return zt(i?.roundingMethod)(r);
       }(r, p);
     u && (n.minutes = u);
     const g = function (t, e, i) {
       const r = jt(t, e) / 1e3;
-      return Rt(i?.roundingMethod)(r);
+      return zt(i?.roundingMethod)(r);
     }(r, Ct(p, {
       minutes: n.minutes
     }));
@@ -2127,8 +2127,8 @@
   }(Le || (Le = {})), function (t) {
     t.PAUSE = "pause", t.RESUME = "resume", t.CANCEL = "cancel";
   }(Ue || (Ue = {}));
-  const ze = ["width", "height", "left", "top"],
-    Re = {
+  const Re = ["width", "height", "left", "top"],
+    ze = {
       nozzle_temperature: "curr_nozzle_temp",
       hotbed_temperature: "curr_hotbed_temp",
       target_nozzle_temperature: "target_nozzle_temp",
@@ -2153,11 +2153,11 @@
     };
   function je(t, e) {
     const i = t.translation_key;
-    return void 0 !== i && (i === e || Re[e] === i);
+    return void 0 !== i && (i === e || ze[e] === i);
   }
   function Ge(t, e) {
     Object.keys(e).forEach(t => {
-      ze.includes(t) && !isNaN(e[t]) && (e[t] = e[t].toString() + "px");
+      Re.includes(t) && !isNaN(e[t]) && (e[t] = e[t].toString() + "px");
     }), t && Object.assign(t.style, e);
   }
   function Ve(t) {
@@ -2330,7 +2330,7 @@
           return "<unknown>";
       }
     };
-  const bi = {
+  const mi = {
       [ke.C]: {
         [ke.C]: t => t,
         [ke.F]: t => 9 * t / 5 + 32
@@ -2340,7 +2340,7 @@
         [ke.F]: t => t
       }
     },
-    mi = (t, e, i = !1) => {
+    bi = (t, e, i = !1) => {
       const r = parseFloat(t.state),
         n = (t => {
           switch (t.attributes.unit_of_measurement) {
@@ -2351,7 +2351,7 @@
               return ke.F;
           }
         })(t),
-        s = (o = r, l = e || n, bi[a = n] && bi[a][l] ? bi[a][l](o) : -1);
+        s = (o = r, l = e || n, mi[a = n] && mi[a][l] ? mi[a][l](o) : -1);
       var o, a, l;
       return `${i ? Math.round(s) : s.toFixed(2)}°${e || n}`;
     };
@@ -2370,7 +2370,7 @@
   function fi(t) {
     return t && Object.values(Le).includes(t) ? Le[t.toUpperCase()] : void 0;
   }
-  let xi = class extends ut {
+  let wi = class extends ut {
     willUpdate(t) {
       super.willUpdate(t), t.has("selectedPrinterID") && (this.printerEntities = Ke(this.hass, this.selectedPrinterID));
     }
@@ -2408,15 +2408,15 @@
     `;
     }
   };
-  n([yt()], xi.prototype, "hass", void 0), n([yt()], xi.prototype, "language", void 0), n([yt({
+  n([yt()], wi.prototype, "hass", void 0), n([yt()], wi.prototype, "language", void 0), n([yt({
     type: Boolean,
     reflect: !0
-  })], xi.prototype, "narrow", void 0), n([yt()], xi.prototype, "route", void 0), n([yt()], xi.prototype, "panel", void 0), n([yt()], xi.prototype, "printers", void 0), n([yt({
+  })], wi.prototype, "narrow", void 0), n([yt()], wi.prototype, "route", void 0), n([yt()], wi.prototype, "panel", void 0), n([yt()], wi.prototype, "printers", void 0), n([yt({
     attribute: "selected-printer-id"
-  })], xi.prototype, "selectedPrinterID", void 0), n([yt({
+  })], wi.prototype, "selectedPrinterID", void 0), n([yt({
     attribute: "selected-printer-device"
-  })], xi.prototype, "selectedPrinterDevice", void 0), n([_t()], xi.prototype, "printerEntities", void 0), xi = n([bt("anycubic-view-debug")], xi);
-  var wi,
+  })], wi.prototype, "selectedPrinterDevice", void 0), n([_t()], wi.prototype, "printerEntities", void 0), wi = n([mt("anycubic-view-debug")], wi);
+  var xi,
     Ei,
     Si,
     $i = "Anycubic Cloud",
@@ -2617,17 +2617,17 @@
   function Ui(t) {
     return !(!t || "object" != typeof t || t.type !== Si.number);
   }
-  function zi(t) {
+  function Ri(t) {
     return !(!t || "object" != typeof t || t.type !== Si.dateTime);
   }
   !function (t) {
     t[t.EXPECT_ARGUMENT_CLOSING_BRACE = 1] = "EXPECT_ARGUMENT_CLOSING_BRACE", t[t.EMPTY_ARGUMENT = 2] = "EMPTY_ARGUMENT", t[t.MALFORMED_ARGUMENT = 3] = "MALFORMED_ARGUMENT", t[t.EXPECT_ARGUMENT_TYPE = 4] = "EXPECT_ARGUMENT_TYPE", t[t.INVALID_ARGUMENT_TYPE = 5] = "INVALID_ARGUMENT_TYPE", t[t.EXPECT_ARGUMENT_STYLE = 6] = "EXPECT_ARGUMENT_STYLE", t[t.INVALID_NUMBER_SKELETON = 7] = "INVALID_NUMBER_SKELETON", t[t.INVALID_DATE_TIME_SKELETON = 8] = "INVALID_DATE_TIME_SKELETON", t[t.EXPECT_NUMBER_SKELETON = 9] = "EXPECT_NUMBER_SKELETON", t[t.EXPECT_DATE_TIME_SKELETON = 10] = "EXPECT_DATE_TIME_SKELETON", t[t.UNCLOSED_QUOTE_IN_ARGUMENT_STYLE = 11] = "UNCLOSED_QUOTE_IN_ARGUMENT_STYLE", t[t.EXPECT_SELECT_ARGUMENT_OPTIONS = 12] = "EXPECT_SELECT_ARGUMENT_OPTIONS", t[t.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE = 13] = "EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE", t[t.INVALID_PLURAL_ARGUMENT_OFFSET_VALUE = 14] = "INVALID_PLURAL_ARGUMENT_OFFSET_VALUE", t[t.EXPECT_SELECT_ARGUMENT_SELECTOR = 15] = "EXPECT_SELECT_ARGUMENT_SELECTOR", t[t.EXPECT_PLURAL_ARGUMENT_SELECTOR = 16] = "EXPECT_PLURAL_ARGUMENT_SELECTOR", t[t.EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT = 17] = "EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT", t[t.EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT = 18] = "EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT", t[t.INVALID_PLURAL_ARGUMENT_SELECTOR = 19] = "INVALID_PLURAL_ARGUMENT_SELECTOR", t[t.DUPLICATE_PLURAL_ARGUMENT_SELECTOR = 20] = "DUPLICATE_PLURAL_ARGUMENT_SELECTOR", t[t.DUPLICATE_SELECT_ARGUMENT_SELECTOR = 21] = "DUPLICATE_SELECT_ARGUMENT_SELECTOR", t[t.MISSING_OTHER_CLAUSE = 22] = "MISSING_OTHER_CLAUSE", t[t.INVALID_TAG = 23] = "INVALID_TAG", t[t.INVALID_TAG_NAME = 25] = "INVALID_TAG_NAME", t[t.UNMATCHED_CLOSING_TAG = 26] = "UNMATCHED_CLOSING_TAG", t[t.UNCLOSED_TAG = 27] = "UNCLOSED_TAG";
-  }(wi || (wi = {})), function (t) {
+  }(xi || (xi = {})), function (t) {
     t[t.literal = 0] = "literal", t[t.argument = 1] = "argument", t[t.number = 2] = "number", t[t.date = 3] = "date", t[t.time = 4] = "time", t[t.select = 5] = "select", t[t.plural = 6] = "plural", t[t.pound = 7] = "pound", t[t.tag = 8] = "tag";
   }(Ei || (Ei = {})), function (t) {
     t[t.number = 0] = "number", t[t.dateTime = 1] = "dateTime";
   }(Si || (Si = {}));
-  var Ri = /[ \xA0\u1680\u2000-\u200A\u202F\u205F\u3000]/,
+  var zi = /[ \xA0\u1680\u2000-\u200A\u202F\u205F\u3000]/,
     ji = /(?:[Eec]{1,6}|G{1,5}|[Qq]{1,5}|(?:[yYur]+|U{1,5})|[ML]{1,5}|d{1,2}|D{1,3}|F{1}|[abB]{1,5}|[hkHK]{1,2}|w{1,2}|W{1}|m{1,2}|s{1,2}|[zZOvVxX]{1,4})(?=([^']*'[^']*')*[^']*$)/g;
   function Gi(t) {
     var e = {};
@@ -3196,8 +3196,8 @@
       r = t.language;
     return "root" !== r && (i = t.maximize().region), (ir[i || ""] || ir[r || ""] || ir["".concat(r, "-001")] || ir["001"])[0];
   }
-  var nr = new RegExp("^".concat(Ri.source, "*")),
-    sr = new RegExp("".concat(Ri.source, "*$"));
+  var nr = new RegExp("^".concat(zi.source, "*")),
+    sr = new RegExp("".concat(zi.source, "*$"));
   function or(t, e) {
     return {
       start: t,
@@ -3215,12 +3215,12 @@
     },
     gr = !0;
   try {
-    gr = "a" === (null === (er = wr("([^\\p{White_Space}\\p{Pattern_Syntax}]*)", "yu").exec("a")) || void 0 === er ? void 0 : er[0]);
+    gr = "a" === (null === (er = xr("([^\\p{White_Space}\\p{Pattern_Syntax}]*)", "yu").exec("a")) || void 0 === er ? void 0 : er[0]);
   } catch (G) {
     gr = !1;
   }
-  var br,
-    mr = ar ? function (t, e, i) {
+  var mr,
+    br = ar ? function (t, e, i) {
       return t.startsWith(e, i);
     } : function (t, e, i) {
       return t.slice(i, i + e.length) === e;
@@ -3257,21 +3257,21 @@
     } : function (t) {
       return t.replace(nr, "");
     },
-    xr = pr ? function (t) {
+    wr = pr ? function (t) {
       return t.trimEnd();
     } : function (t) {
       return t.replace(sr, "");
     };
-  function wr(t, e) {
+  function xr(t, e) {
     return new RegExp(t, e);
   }
   if (gr) {
-    var Er = wr("([^\\p{White_Space}\\p{Pattern_Syntax}]*)", "yu");
-    br = function (t, e) {
+    var Er = xr("([^\\p{White_Space}\\p{Pattern_Syntax}]*)", "yu");
+    mr = function (t, e) {
       var i;
       return Er.lastIndex = e, null !== (i = Er.exec(t)[1]) && void 0 !== i ? i : "";
     };
-  } else br = function (t, e) {
+  } else mr = function (t, e) {
     for (var i = [];;) {
       var r = _r(t, e);
       if (void 0 === r || Ar(r) || Tr(r)) break;
@@ -3301,7 +3301,7 @@
           if (35 !== n || "plural" !== e && "selectordinal" !== e) {
             if (60 === n && !this.ignoreTag && 47 === this.peek()) {
               if (i) break;
-              return this.error(wi.UNMATCHED_CLOSING_TAG, or(this.clonePosition(), this.clonePosition()));
+              return this.error(xi.UNMATCHED_CLOSING_TAG, or(this.clonePosition(), this.clonePosition()));
             }
             if (60 === n && !this.ignoreTag && $r(this.peek() || 0)) {
               if ((s = this.parseTag(t, e)).err) return s;
@@ -3342,9 +3342,9 @@
         var s = n.val,
           o = this.clonePosition();
         if (this.bumpIf("</")) {
-          if (this.isEOF() || !$r(this.char())) return this.error(wi.INVALID_TAG, or(o, this.clonePosition()));
+          if (this.isEOF() || !$r(this.char())) return this.error(xi.INVALID_TAG, or(o, this.clonePosition()));
           var a = this.clonePosition();
-          return r !== this.parseTagName() ? this.error(wi.UNMATCHED_CLOSING_TAG, or(a, this.clonePosition())) : (this.bumpSpace(), this.bumpIf(">") ? {
+          return r !== this.parseTagName() ? this.error(xi.UNMATCHED_CLOSING_TAG, or(a, this.clonePosition())) : (this.bumpSpace(), this.bumpIf(">") ? {
             val: {
               type: Ei.tag,
               value: r,
@@ -3352,11 +3352,11 @@
               location: or(i, this.clonePosition())
             },
             err: null
-          } : this.error(wi.INVALID_TAG, or(o, this.clonePosition())));
+          } : this.error(xi.INVALID_TAG, or(o, this.clonePosition())));
         }
-        return this.error(wi.UNCLOSED_TAG, or(i, this.clonePosition()));
+        return this.error(xi.UNCLOSED_TAG, or(i, this.clonePosition()));
       }
-      return this.error(wi.INVALID_TAG, or(i, this.clonePosition()));
+      return this.error(xi.INVALID_TAG, or(i, this.clonePosition()));
     }, t.prototype.parseTagName = function () {
       var t = this.offset();
       for (this.bump(); !this.isEOF() && Pr(this.char());) this.bump();
@@ -3421,11 +3421,11 @@
       return 60 === i || 123 === i || 35 === i && ("plural" === e || "selectordinal" === e) || 125 === i && t > 0 ? null : (this.bump(), vr(i));
     }, t.prototype.parseArgument = function (t, e) {
       var i = this.clonePosition();
-      if (this.bump(), this.bumpSpace(), this.isEOF()) return this.error(wi.EXPECT_ARGUMENT_CLOSING_BRACE, or(i, this.clonePosition()));
-      if (125 === this.char()) return this.bump(), this.error(wi.EMPTY_ARGUMENT, or(i, this.clonePosition()));
+      if (this.bump(), this.bumpSpace(), this.isEOF()) return this.error(xi.EXPECT_ARGUMENT_CLOSING_BRACE, or(i, this.clonePosition()));
+      if (125 === this.char()) return this.bump(), this.error(xi.EMPTY_ARGUMENT, or(i, this.clonePosition()));
       var r = this.parseIdentifierIfPossible().value;
-      if (!r) return this.error(wi.MALFORMED_ARGUMENT, or(i, this.clonePosition()));
-      if (this.bumpSpace(), this.isEOF()) return this.error(wi.EXPECT_ARGUMENT_CLOSING_BRACE, or(i, this.clonePosition()));
+      if (!r) return this.error(xi.MALFORMED_ARGUMENT, or(i, this.clonePosition()));
+      if (this.bumpSpace(), this.isEOF()) return this.error(xi.EXPECT_ARGUMENT_CLOSING_BRACE, or(i, this.clonePosition()));
       switch (this.char()) {
         case 125:
           return this.bump(), {
@@ -3437,14 +3437,14 @@
             err: null
           };
         case 44:
-          return this.bump(), this.bumpSpace(), this.isEOF() ? this.error(wi.EXPECT_ARGUMENT_CLOSING_BRACE, or(i, this.clonePosition())) : this.parseArgumentOptions(t, e, r, i);
+          return this.bump(), this.bumpSpace(), this.isEOF() ? this.error(xi.EXPECT_ARGUMENT_CLOSING_BRACE, or(i, this.clonePosition())) : this.parseArgumentOptions(t, e, r, i);
         default:
-          return this.error(wi.MALFORMED_ARGUMENT, or(i, this.clonePosition()));
+          return this.error(xi.MALFORMED_ARGUMENT, or(i, this.clonePosition()));
       }
     }, t.prototype.parseIdentifierIfPossible = function () {
       var t = this.clonePosition(),
         e = this.offset(),
-        i = br(this.message, e),
+        i = mr(this.message, e),
         r = e + i.length;
       return this.bumpTo(r), {
         value: i,
@@ -3457,7 +3457,7 @@
         l = this.clonePosition();
       switch (a) {
         case "":
-          return this.error(wi.EXPECT_ARGUMENT_TYPE, or(o, l));
+          return this.error(xi.EXPECT_ARGUMENT_TYPE, or(o, l));
         case "number":
         case "date":
         case "time":
@@ -3467,7 +3467,7 @@
             this.bumpSpace();
             var c = this.clonePosition();
             if ((y = this.parseSimpleArgStyleIfPossible()).err) return y;
-            if (0 === (g = xr(y.val)).length) return this.error(wi.EXPECT_ARGUMENT_STYLE, or(this.clonePosition(), this.clonePosition()));
+            if (0 === (g = wr(y.val)).length) return this.error(xi.EXPECT_ARGUMENT_STYLE, or(this.clonePosition(), this.clonePosition()));
             h = {
               style: g,
               styleLocation: or(c, this.clonePosition())
@@ -3475,7 +3475,7 @@
           }
           if ((_ = this.tryParseArgumentClose(n)).err) return _;
           var d = or(n, this.clonePosition());
-          if (h && mr(null == h ? void 0 : h.style, "::", 0)) {
+          if (h && br(null == h ? void 0 : h.style, "::", 0)) {
             var p = fr(h.style.slice(2));
             if ("number" === a) return (y = this.parseNumberSkeletonFromString(p, h.styleLocation)).err ? y : {
               val: {
@@ -3486,7 +3486,7 @@
               },
               err: null
             };
-            if (0 === p.length) return this.error(wi.EXPECT_DATE_TIME_SKELETON, d);
+            if (0 === p.length) return this.error(xi.EXPECT_DATE_TIME_SKELETON, d);
             var u = p;
             this.locale && (u = function (t, e) {
               for (var i = "", r = 0; r < t.length; r++) {
@@ -3530,28 +3530,28 @@
         case "plural":
         case "selectordinal":
         case "select":
-          var b = this.clonePosition();
-          if (this.bumpSpace(), !this.bumpIf(",")) return this.error(wi.EXPECT_SELECT_ARGUMENT_OPTIONS, or(b, r({}, b)));
+          var m = this.clonePosition();
+          if (this.bumpSpace(), !this.bumpIf(",")) return this.error(xi.EXPECT_SELECT_ARGUMENT_OPTIONS, or(m, r({}, m)));
           this.bumpSpace();
-          var m = this.parseIdentifierIfPossible(),
+          var b = this.parseIdentifierIfPossible(),
             v = 0;
-          if ("select" !== a && "offset" === m.value) {
-            if (!this.bumpIf(":")) return this.error(wi.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, or(this.clonePosition(), this.clonePosition()));
+          if ("select" !== a && "offset" === b.value) {
+            if (!this.bumpIf(":")) return this.error(xi.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, or(this.clonePosition(), this.clonePosition()));
             var y;
-            if (this.bumpSpace(), (y = this.tryParseDecimalInteger(wi.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, wi.INVALID_PLURAL_ARGUMENT_OFFSET_VALUE)).err) return y;
-            this.bumpSpace(), m = this.parseIdentifierIfPossible(), v = y.val;
+            if (this.bumpSpace(), (y = this.tryParseDecimalInteger(xi.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, xi.INVALID_PLURAL_ARGUMENT_OFFSET_VALUE)).err) return y;
+            this.bumpSpace(), b = this.parseIdentifierIfPossible(), v = y.val;
           }
           var _,
-            f = this.tryParsePluralOrSelectOptions(t, a, e, m);
+            f = this.tryParsePluralOrSelectOptions(t, a, e, b);
           if (f.err) return f;
           if ((_ = this.tryParseArgumentClose(n)).err) return _;
-          var x = or(n, this.clonePosition());
+          var w = or(n, this.clonePosition());
           return "select" === a ? {
             val: {
               type: Ei.select,
               value: i,
               options: yr(f.val),
-              location: x
+              location: w
             },
             err: null
           } : {
@@ -3561,15 +3561,15 @@
               options: yr(f.val),
               offset: v,
               pluralType: "plural" === a ? "cardinal" : "ordinal",
-              location: x
+              location: w
             },
             err: null
           };
         default:
-          return this.error(wi.INVALID_ARGUMENT_TYPE, or(o, l));
+          return this.error(xi.INVALID_ARGUMENT_TYPE, or(o, l));
       }
     }, t.prototype.tryParseArgumentClose = function (t) {
-      return this.isEOF() || 125 !== this.char() ? this.error(wi.EXPECT_ARGUMENT_CLOSING_BRACE, or(t, this.clonePosition())) : (this.bump(), {
+      return this.isEOF() || 125 !== this.char() ? this.error(xi.EXPECT_ARGUMENT_CLOSING_BRACE, or(t, this.clonePosition())) : (this.bump(), {
         val: !0,
         err: null
       });
@@ -3579,7 +3579,7 @@
           case 39:
             this.bump();
             var i = this.clonePosition();
-            if (!this.bumpUntil("'")) return this.error(wi.UNCLOSED_QUOTE_IN_ARGUMENT_STYLE, or(i, this.clonePosition()));
+            if (!this.bumpUntil("'")) return this.error(xi.UNCLOSED_QUOTE_IN_ARGUMENT_STYLE, or(i, this.clonePosition()));
             this.bump();
             break;
           case 123:
@@ -3619,7 +3619,7 @@
           return i;
         }(t);
       } catch (t) {
-        return this.error(wi.INVALID_NUMBER_SKELETON, e);
+        return this.error(xi.INVALID_NUMBER_SKELETON, e);
       }
       return {
         val: {
@@ -3635,14 +3635,14 @@
         if (0 === l.length) {
           var c = this.clonePosition();
           if ("select" === e || !this.bumpIf("=")) break;
-          var d = this.tryParseDecimalInteger(wi.EXPECT_PLURAL_ARGUMENT_SELECTOR, wi.INVALID_PLURAL_ARGUMENT_SELECTOR);
+          var d = this.tryParseDecimalInteger(xi.EXPECT_PLURAL_ARGUMENT_SELECTOR, xi.INVALID_PLURAL_ARGUMENT_SELECTOR);
           if (d.err) return d;
           h = or(c, this.clonePosition()), l = this.message.slice(c.offset, this.offset());
         }
-        if (a.has(l)) return this.error("select" === e ? wi.DUPLICATE_SELECT_ARGUMENT_SELECTOR : wi.DUPLICATE_PLURAL_ARGUMENT_SELECTOR, h);
+        if (a.has(l)) return this.error("select" === e ? xi.DUPLICATE_SELECT_ARGUMENT_SELECTOR : xi.DUPLICATE_PLURAL_ARGUMENT_SELECTOR, h);
         "other" === l && (s = !0), this.bumpSpace();
         var p = this.clonePosition();
-        if (!this.bumpIf("{")) return this.error("select" === e ? wi.EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT : wi.EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT, or(this.clonePosition(), this.clonePosition()));
+        if (!this.bumpIf("{")) return this.error("select" === e ? xi.EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT : xi.EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT, or(this.clonePosition(), this.clonePosition()));
         var u = this.parseMessage(t + 1, e, i);
         if (u.err) return u;
         var g = this.tryParseArgumentClose(p);
@@ -3652,7 +3652,7 @@
           location: or(p, this.clonePosition())
         }]), a.add(l), this.bumpSpace(), l = (n = this.parseIdentifierIfPossible()).value, h = n.location;
       }
-      return 0 === o.length ? this.error("select" === e ? wi.EXPECT_SELECT_ARGUMENT_SELECTOR : wi.EXPECT_PLURAL_ARGUMENT_SELECTOR, or(this.clonePosition(), this.clonePosition())) : this.requiresOtherClause && !s ? this.error(wi.MISSING_OTHER_CLAUSE, or(this.clonePosition(), this.clonePosition())) : {
+      return 0 === o.length ? this.error("select" === e ? xi.EXPECT_SELECT_ARGUMENT_SELECTOR : xi.EXPECT_PLURAL_ARGUMENT_SELECTOR, or(this.clonePosition(), this.clonePosition())) : this.requiresOtherClause && !s ? this.error(xi.MISSING_OTHER_CLAUSE, or(this.clonePosition(), this.clonePosition())) : {
         val: o,
         err: null
       };
@@ -3701,7 +3701,7 @@
         10 === t ? (this.position.line += 1, this.position.column = 1, this.position.offset += 1) : (this.position.column += 1, this.position.offset += t < 65536 ? 1 : 2);
       }
     }, t.prototype.bumpIf = function (t) {
-      if (mr(this.message, t, this.offset())) {
+      if (br(this.message, t, this.offset())) {
         for (var e = 0; e < t.length; e++) this.bump();
         return !0;
       }
@@ -3742,7 +3742,7 @@
   }
   function Cr(t) {
     t.forEach(function (t) {
-      if (delete t.location, Bi(t) || Ni(t)) for (var e in t.options) delete t.options[e].location, Cr(t.options[e].value);else ki(t) && Ui(t.style) || (Ii(t) || Fi(t)) && zi(t.style) ? delete t.style.location : Li(t) && Cr(t.children);
+      if (delete t.location, Bi(t) || Ni(t)) for (var e in t.options) delete t.options[e].location, Cr(t.options[e].value);else ki(t) && Ui(t.style) || (Ii(t) || Fi(t)) && Ri(t.style) ? delete t.style.location : Li(t) && Cr(t.children);
     });
   }
   function Hr(t, e) {
@@ -3752,7 +3752,7 @@
     }, e);
     var i = new Sr(t, e).parse();
     if (i.err) {
-      var n = SyntaxError(wi[i.err.kind]);
+      var n = SyntaxError(xi[i.err.kind]);
       throw n.location = i.err.location, n.originalMessage = i.err.message, n;
     }
     return (null == e ? void 0 : e.captureLocation) || Cr(i.val), i.val;
@@ -3811,8 +3811,8 @@
   !function (t) {
     t.MISSING_VALUE = "MISSING_VALUE", t.INVALID_VALUE = "INVALID_VALUE", t.MISSING_INTL_API = "MISSING_INTL_API";
   }(Or || (Or = {}));
-  var zr,
-    Rr = function (t) {
+  var Rr,
+    zr = function (t) {
       function e(e, i, r) {
         var n = t.call(this, e) || this;
         return n.code = i, n.originalMessage = r, n;
@@ -3826,71 +3826,71 @@
         return t.call(this, 'Invalid values for "'.concat(e, '": "').concat(i, '". Options are "').concat(Object.keys(r).join('", "'), '"'), Or.INVALID_VALUE, n) || this;
       }
       return i(e, t), e;
-    }(Rr),
+    }(zr),
     Gr = function (t) {
       function e(e, i, r) {
         return t.call(this, 'Value for "'.concat(e, '" must be of type ').concat(i), Or.INVALID_VALUE, r) || this;
       }
       return i(e, t), e;
-    }(Rr),
+    }(zr),
     Vr = function (t) {
       function e(e, i) {
         return t.call(this, 'The intl string context variable "'.concat(e, '" was not provided to the string "').concat(i, '"'), Or.MISSING_VALUE, i) || this;
       }
       return i(e, t), e;
-    }(Rr);
+    }(zr);
   function Yr(t) {
     return "function" == typeof t;
   }
   function Wr(t, e, i, r, n, s, o) {
     if (1 === t.length && Di(t[0])) return [{
-      type: zr.literal,
+      type: Rr.literal,
       value: t[0].value
     }];
     for (var a = [], l = 0, h = t; l < h.length; l++) {
       var c = h[l];
       if (Di(c)) a.push({
-        type: zr.literal,
+        type: Rr.literal,
         value: c.value
       });else if (Oi(c)) "number" == typeof s && a.push({
-        type: zr.literal,
+        type: Rr.literal,
         value: i.getNumberFormat(e).format(s)
       });else {
         var d = c.value;
         if (!n || !(d in n)) throw new Vr(d, o);
         var p = n[d];
         if (Mi(c)) p && "string" != typeof p && "number" != typeof p || (p = "string" == typeof p || "number" == typeof p ? String(p) : ""), a.push({
-          type: "string" == typeof p ? zr.literal : zr.object,
+          type: "string" == typeof p ? Rr.literal : Rr.object,
           value: p
         });else if (Ii(c)) {
-          var u = "string" == typeof c.style ? r.date[c.style] : zi(c.style) ? c.style.parsedOptions : void 0;
+          var u = "string" == typeof c.style ? r.date[c.style] : Ri(c.style) ? c.style.parsedOptions : void 0;
           a.push({
-            type: zr.literal,
+            type: Rr.literal,
             value: i.getDateTimeFormat(e, u).format(p)
           });
         } else if (Fi(c)) {
-          u = "string" == typeof c.style ? r.time[c.style] : zi(c.style) ? c.style.parsedOptions : r.time.medium;
+          u = "string" == typeof c.style ? r.time[c.style] : Ri(c.style) ? c.style.parsedOptions : r.time.medium;
           a.push({
-            type: zr.literal,
+            type: Rr.literal,
             value: i.getDateTimeFormat(e, u).format(p)
           });
         } else if (ki(c)) {
           (u = "string" == typeof c.style ? r.number[c.style] : Ui(c.style) ? c.style.parsedOptions : void 0) && u.scale && (p *= u.scale || 1), a.push({
-            type: zr.literal,
+            type: Rr.literal,
             value: i.getNumberFormat(e, u).format(p)
           });
         } else {
           if (Li(c)) {
             var g = c.children,
-              b = c.value,
-              m = n[b];
-            if (!Yr(m)) throw new Gr(b, "function", o);
-            var v = m(Wr(g, e, i, r, n, s).map(function (t) {
+              m = c.value,
+              b = n[m];
+            if (!Yr(b)) throw new Gr(m, "function", o);
+            var v = b(Wr(g, e, i, r, n, s).map(function (t) {
               return t.value;
             }));
             Array.isArray(v) || (v = [v]), a.push.apply(a, v.map(function (t) {
               return {
-                type: "string" == typeof t ? zr.literal : zr.object,
+                type: "string" == typeof t ? Rr.literal : Rr.object,
                 value: t
               };
             }));
@@ -3901,7 +3901,7 @@
           } else if (Ni(c)) {
             var y;
             if (!(y = c.options["=".concat(p)])) {
-              if (!Intl.PluralRules) throw new Rr('Intl.PluralRules is not available in this environment.\nTry polyfilling it using "@formatjs/intl-pluralrules"\n', Or.MISSING_INTL_API, o);
+              if (!Intl.PluralRules) throw new zr('Intl.PluralRules is not available in this environment.\nTry polyfilling it using "@formatjs/intl-pluralrules"\n', Or.MISSING_INTL_API, o);
               var _ = i.getPluralRules(e, {
                 type: c.pluralType
               }).select(p - (c.offset || 0));
@@ -3916,7 +3916,7 @@
     return function (t) {
       return t.length < 2 ? t : t.reduce(function (t, e) {
         var i = t[t.length - 1];
-        return i && i.type === zr.literal && e.type === zr.literal ? i.value += e.value : t.push(e), t;
+        return i && i.type === Rr.literal && e.type === Rr.literal ? i.value += e.value : t.push(e), t;
       }, []);
     }(a);
   }
@@ -3944,7 +3944,7 @@
   }
   !function (t) {
     t[t.literal = 0] = "literal", t[t.object = 1] = "object";
-  }(zr || (zr = {}));
+  }(Rr || (Rr = {}));
   var Kr = function () {
       function t(e, i, n, o) {
         var a,
@@ -3957,7 +3957,7 @@
           var e = l.formatToParts(t);
           if (1 === e.length) return e[0].value;
           var i = e.reduce(function (t, e) {
-            return t.length && e.type === zr.literal && "string" == typeof t[t.length - 1] ? t[t.length - 1] += e.value : t.push(e.value), t;
+            return t.length && e.type === Rr.literal && "string" == typeof t[t.length - 1] ? t[t.length - 1] += e.value : t.push(e.value), t;
           }, []);
           return i.length <= 1 ? i[0] || "" : i;
         }, this.formatToParts = function (t) {
@@ -4232,13 +4232,13 @@
         e.remove(), e = t;
       }
     },
-    bn = (t, e) => {
+    mn = (t, e) => {
       const i = t._$AN;
       if (void 0 === i) return !1;
-      for (const t of i) t._$AO?.(e, !1), bn(t, e);
+      for (const t of i) t._$AO?.(e, !1), mn(t, e);
       return !0;
     },
-    mn = t => {
+    bn = t => {
       let e, i;
       do {
         if (void 0 === (e = t._$AM)) break;
@@ -4258,19 +4258,19 @@
        * SPDX-License-Identifier: BSD-3-Clause
        */
   function yn(t) {
-    void 0 !== this._$AN ? (mn(this), this._$AM = t, vn(this)) : this._$AM = t;
+    void 0 !== this._$AN ? (bn(this), this._$AM = t, vn(this)) : this._$AM = t;
   }
   function _n(t, e = !1, i = 0) {
     const r = this._$AH,
       n = this._$AN;
     if (void 0 !== n && 0 !== n.size) if (e) {
-      if (Array.isArray(r)) for (let t = i; t < r.length; t++) bn(r[t], !1), mn(r[t]);else null != r && (bn(r, !1), mn(r));
-    } else bn(this, t);
+      if (Array.isArray(r)) for (let t = i; t < r.length; t++) mn(r[t], !1), bn(r[t]);else null != r && (mn(r, !1), bn(r));
+    } else mn(this, t);
   }
   const fn = t => {
     t.type == en && (t._$AP ??= _n, t._$AQ ??= yn);
   };
-  class xn extends nn {
+  class wn extends nn {
     constructor() {
       super(...arguments), this._$AN = void 0;
     }
@@ -4278,7 +4278,7 @@
       super._$AT(t, e, i), vn(this), this.isConnected = t._$AU;
     }
     _$AO(t, e = !0) {
-      t !== this.isConnected && (this.isConnected = t, t ? this.reconnected?.() : this.disconnected?.()), e && (bn(this, t), mn(this));
+      t !== this.isConnected && (this.isConnected = t, t ? this.reconnected?.() : this.disconnected?.()), e && (mn(this, t), bn(this));
     }
     setValue(t) {
       if ((t => void 0 === t.strings)(this._$Ct)) this._$Ct._$AI(t, this);else {
@@ -4289,7 +4289,7 @@
     disconnected() {}
     reconnected() {}
   }
-  const wn = new WeakMap();
+  const xn = new WeakMap();
   let En = 0;
   const Sn = new Map(),
     $n = new WeakSet(),
@@ -4348,7 +4348,7 @@
     },
     Dn = ["left", "top", "width", "height", "opacity", "color", "background"],
     Mn = new WeakMap();
-  const kn = rn(class extends xn {
+  const kn = rn(class extends wn {
       constructor(t) {
         if (super(t), this.t = !1, this.i = null, this.o = null, this.h = !0, this.shouldLog = !1, t.type === en) throw Error("The `animate` directive must be used in attribute position.");
         this.createFinished();
@@ -4365,7 +4365,7 @@
         return Z;
       }
       getController() {
-        return wn.get(this.u);
+        return xn.get(this.u);
       }
       isDisabled() {
         return this.options.disabled || this.getController()?.disabled;
@@ -4642,8 +4642,8 @@
     On = "ace_run_out_refill",
     Ln = Nn + On,
     Un = "ace_spools",
-    zn = Nn + Un;
-  let Rn = class extends ut {
+    Rn = Nn + Un;
+  let zn = class extends ut {
     constructor() {
       super(...arguments), this.box_id = 0, this._runoutRefillId = On, this._spoolsEntityId = Un, this.spoolList = [], this.selectedIndex = -1, this.selectedMaterialType = "", this.selectedColor = [0, 0, 0], this._changingRunout = !1, this._openDryingModal = () => {
         De(this, "ac-mcbdry-modal", {
@@ -4673,7 +4673,7 @@
     }
     willUpdate(t) {
       var e, i, r, n;
-      super.willUpdate(t), t.has("language") && (this._buttonRefill = Jr("card.buttons.runout_refill", this.language), this._buttonDry = Jr("card.buttons.dry", this.language)), t.has("box_id") && (1 === this.box_id ? (this._runoutRefillId = Ln, this._spoolsEntityId = zn) : (this._runoutRefillId = On, this._spoolsEntityId = Un)), (t.has("hass") || t.has("printerEntities") || t.has("printerEntityIdPart")) && (this.spoolList = ni(this.hass, this.printerEntities, this.printerEntityIdPart, this._spoolsEntityId, "not loaded", {
+      super.willUpdate(t), t.has("language") && (this._buttonRefill = Jr("card.buttons.runout_refill", this.language), this._buttonDry = Jr("card.buttons.dry", this.language)), t.has("box_id") && (1 === this.box_id ? (this._runoutRefillId = Ln, this._spoolsEntityId = Rn) : (this._runoutRefillId = On, this._spoolsEntityId = Un)), (t.has("hass") || t.has("printerEntities") || t.has("printerEntityIdPart")) && (this.spoolList = ni(this.hass, this.printerEntities, this.printerEntityIdPart, this._spoolsEntityId, "not loaded", {
         spool_info: []
       }).attributes.spool_info, this._runoutRefillState = (e = this.hass, i = this.printerEntities, r = this.printerEntityIdPart, n = this._runoutRefillId, We(e, Je(i, r, "switch", n))));
     }
@@ -4857,11 +4857,11 @@
     `;
     }
   };
-  n([yt()], Rn.prototype, "hass", void 0), n([yt()], Rn.prototype, "language", void 0), n([yt({
+  n([yt()], zn.prototype, "hass", void 0), n([yt()], zn.prototype, "language", void 0), n([yt({
     attribute: "printer-entities"
-  })], Rn.prototype, "printerEntities", void 0), n([yt({
+  })], zn.prototype, "printerEntities", void 0), n([yt({
     attribute: "printer-entity-id-part"
-  })], Rn.prototype, "printerEntityIdPart", void 0), n([yt()], Rn.prototype, "box_id", void 0), n([_t()], Rn.prototype, "_runoutRefillId", void 0), n([_t()], Rn.prototype, "_spoolsEntityId", void 0), n([_t()], Rn.prototype, "spoolList", void 0), n([_t()], Rn.prototype, "selectedIndex", void 0), n([_t()], Rn.prototype, "selectedMaterialType", void 0), n([_t()], Rn.prototype, "selectedColor", void 0), n([_t()], Rn.prototype, "_runoutRefillState", void 0), n([_t()], Rn.prototype, "_buttonRefill", void 0), n([_t()], Rn.prototype, "_buttonDry", void 0), n([_t()], Rn.prototype, "_changingRunout", void 0), Rn = n([In("anycubic-printercard-multicolorbox_view")], Rn);
+  })], zn.prototype, "printerEntityIdPart", void 0), n([yt()], zn.prototype, "box_id", void 0), n([_t()], zn.prototype, "_runoutRefillId", void 0), n([_t()], zn.prototype, "_spoolsEntityId", void 0), n([_t()], zn.prototype, "spoolList", void 0), n([_t()], zn.prototype, "selectedIndex", void 0), n([_t()], zn.prototype, "selectedMaterialType", void 0), n([_t()], zn.prototype, "selectedColor", void 0), n([_t()], zn.prototype, "_runoutRefillState", void 0), n([_t()], zn.prototype, "_buttonRefill", void 0), n([_t()], zn.prototype, "_buttonDry", void 0), n([_t()], zn.prototype, "_changingRunout", void 0), zn = n([In("anycubic-printercard-multicolorbox_view")], zn);
   class jn {
     constructor(t) {
       this.scale_factor = t;
@@ -5051,17 +5051,17 @@
           p = s.val(t.top.height - t.buildplate.verticalOffset) + h,
           u = p + s.val((t.xAxis.extruder.height - t.xAxis.height) / 2 - (t.xAxis.extruder.height + 12)),
           g = s.val(t.buildplate.maxWidth),
-          b = s.val(t.buildplate.maxHeight),
-          m = s.val(t.left.width + (s.og(l) - t.buildplate.maxWidth) / 2),
+          m = s.val(t.buildplate.maxHeight),
+          b = s.val(t.left.width + (s.og(l) - t.buildplate.maxWidth) / 2),
           v = p - s.val(t.buildplate.maxHeight),
           y = g,
-          _ = m,
+          _ = b,
           f = p,
-          x = s.val(t.xAxis.width),
-          w = s.val(t.xAxis.height),
+          w = s.val(t.xAxis.width),
+          x = s.val(t.xAxis.height),
           E = s.val(t.xAxis.offsetLeft),
-          S = x,
-          $ = w,
+          S = w,
+          $ = x,
           P = s.val(t.xAxis.extruder.width),
           A = s.val(t.xAxis.extruder.height),
           T = _ - P / 2,
@@ -5086,8 +5086,8 @@
           },
           BuildArea: {
             width: g,
-            height: b,
-            left: m,
+            height: m,
+            left: b,
             top: v
           },
           BuildPlate: {
@@ -5096,10 +5096,10 @@
             top: f
           },
           XAxis: {
-            width: x,
-            height: w,
+            width: w,
+            height: x,
             left: E,
-            top: M + .7 * A - w / 2
+            top: M + .7 * A - x / 2
           },
           Track: {
             width: S,
@@ -5225,7 +5225,7 @@
     `;
     }
   };
-  n([xt(".ac-printercard-animatedprinter")], Xn.prototype, "_rootElement", void 0), n([xt(".ac-apr-scalable")], Xn.prototype, "_elAcAPr_scalable", void 0), n([xt(".ac-apr-frame")], Xn.prototype, "_elAcAPr_frame", void 0), n([xt(".ac-apr-hole")], Xn.prototype, "_elAcAPr_hole", void 0), n([xt(".ac-apr-buildarea")], Xn.prototype, "_elAcAPr_buildarea", void 0), n([xt(".ac-apr-animprint")], Xn.prototype, "_elAcAPr_animprint", void 0), n([xt(".ac-apr-buildplate")], Xn.prototype, "_elAcAPr_buildplate", void 0), n([xt(".ac-apr-xaxis")], Xn.prototype, "_elAcAPr_xaxis", void 0), n([xt(".ac-apr-gantry")], Xn.prototype, "_elAcAPr_gantry", void 0), n([xt(".ac-apr-nozzle")], Xn.prototype, "_elAcAPr_nozzle", void 0), n([yt()], Xn.prototype, "hass", void 0), n([yt({
+  n([wt(".ac-printercard-animatedprinter")], Xn.prototype, "_rootElement", void 0), n([wt(".ac-apr-scalable")], Xn.prototype, "_elAcAPr_scalable", void 0), n([wt(".ac-apr-frame")], Xn.prototype, "_elAcAPr_frame", void 0), n([wt(".ac-apr-hole")], Xn.prototype, "_elAcAPr_hole", void 0), n([wt(".ac-apr-buildarea")], Xn.prototype, "_elAcAPr_buildarea", void 0), n([wt(".ac-apr-animprint")], Xn.prototype, "_elAcAPr_animprint", void 0), n([wt(".ac-apr-buildplate")], Xn.prototype, "_elAcAPr_buildplate", void 0), n([wt(".ac-apr-xaxis")], Xn.prototype, "_elAcAPr_xaxis", void 0), n([wt(".ac-apr-gantry")], Xn.prototype, "_elAcAPr_gantry", void 0), n([wt(".ac-apr-nozzle")], Xn.prototype, "_elAcAPr_nozzle", void 0), n([yt()], Xn.prototype, "hass", void 0), n([yt({
     attribute: "scale-factor"
   })], Xn.prototype, "scaleFactor", void 0), n([yt({
     attribute: "printer-config"
@@ -5493,7 +5493,7 @@
     render() {
       return q`<anycubic-printercard-stat-line
       .name=${this.name}
-      .value=${mi(this.temperatureEntity, this.temperatureUnit, this.round)}
+      .value=${bi(this.temperatureEntity, this.temperatureUnit, this.round)}
     ></anycubic-printercard-stat-line>`;
     }
     static get styles() {
@@ -6114,8 +6114,8 @@
     ps = "secondary_",
     us = ps + as,
     gs = ps + ls,
-    bs = ps + hs,
-    ms = ps + cs,
+    ms = ps + hs,
+    bs = ps + cs,
     vs = ps + ds;
   let ys = class extends ut {
     constructor() {
@@ -6152,7 +6152,7 @@
       null === (t = this.parentElement) || void 0 === t || t.removeEventListener("ac-mcbdry-modal", this._handleModalEvent), super.disconnectedCallback();
     }
     willUpdate(t) {
-      if (super.willUpdate(t), t.has("language") && (this._heading = Jr("card.drying_settings.heading", this.language), this._buttonTextPreset = Jr("card.drying_settings.button_preset", this.language), this._buttonTextMinutes = Jr("card.drying_settings.button_minutes", this.language), this._buttonStopDrying = Jr("card.drying_settings.button_stop_drying", this.language)), t.has("box_id") && (1 === this.box_id ? (this._dryingPresetId1 = us, this._dryingPresetId2 = gs, this._dryingPresetId3 = bs, this._dryingPresetId4 = ms, this._dryingStopId = vs) : (this._dryingPresetId1 = as, this._dryingPresetId2 = ls, this._dryingPresetId3 = hs, this._dryingPresetId4 = cs, this._dryingStopId = ds)), t.has("hass") || t.has("selectedPrinterDevice")) {
+      if (super.willUpdate(t), t.has("language") && (this._heading = Jr("card.drying_settings.heading", this.language), this._buttonTextPreset = Jr("card.drying_settings.button_preset", this.language), this._buttonTextMinutes = Jr("card.drying_settings.button_minutes", this.language), this._buttonStopDrying = Jr("card.drying_settings.button_stop_drying", this.language)), t.has("box_id") && (1 === this.box_id ? (this._dryingPresetId1 = us, this._dryingPresetId2 = gs, this._dryingPresetId3 = ms, this._dryingPresetId4 = bs, this._dryingStopId = vs) : (this._dryingPresetId1 = as, this._dryingPresetId2 = ls, this._dryingPresetId3 = hs, this._dryingPresetId4 = cs, this._dryingStopId = ds)), t.has("hass") || t.has("selectedPrinterDevice")) {
         const t = ei(this.hass, this.printerEntities, this.printerEntityIdPart, this._dryingPresetId1);
         this._hasDryingPreset1 = ii(t), this._dryingPresetTemp1 = String(t.attributes.temperature), this._dryingPresetDur1 = String(t.attributes.duration);
         const e = ei(this.hass, this.printerEntities, this.printerEntityIdPart, this._dryingPresetId2);
@@ -6292,11 +6292,11 @@
   })], ys.prototype, "printerEntities", void 0), n([yt({
     attribute: "printer-entity-id-part"
   })], ys.prototype, "printerEntityIdPart", void 0), n([_t()], ys.prototype, "box_id", void 0), n([_t()], ys.prototype, "_dryingPresetId1", void 0), n([_t()], ys.prototype, "_dryingPresetId2", void 0), n([_t()], ys.prototype, "_dryingPresetId3", void 0), n([_t()], ys.prototype, "_dryingPresetId4", void 0), n([_t()], ys.prototype, "_dryingStopId", void 0), n([_t()], ys.prototype, "_hasDryingPreset1", void 0), n([_t()], ys.prototype, "_hasDryingPreset2", void 0), n([_t()], ys.prototype, "_hasDryingPreset3", void 0), n([_t()], ys.prototype, "_hasDryingPreset4", void 0), n([_t()], ys.prototype, "_hasDryingStop", void 0), n([_t()], ys.prototype, "_dryingPresetTemp1", void 0), n([_t()], ys.prototype, "_dryingPresetDur1", void 0), n([_t()], ys.prototype, "_dryingPresetTemp2", void 0), n([_t()], ys.prototype, "_dryingPresetDur2", void 0), n([_t()], ys.prototype, "_dryingPresetTemp3", void 0), n([_t()], ys.prototype, "_dryingPresetDur3", void 0), n([_t()], ys.prototype, "_dryingPresetTemp4", void 0), n([_t()], ys.prototype, "_dryingPresetDur4", void 0), n([_t()], ys.prototype, "_isOpen", void 0), n([_t()], ys.prototype, "_heading", void 0), n([_t()], ys.prototype, "_buttonTextPreset", void 0), n([_t()], ys.prototype, "_buttonTextMinutes", void 0), n([_t()], ys.prototype, "_buttonStopDrying", void 0), ys = n([In("anycubic-printercard-multicolorbox_modal_drying")], ys);
-  const _s = t => ws(255, Math.round(Number(t))),
+  const _s = t => xs(255, Math.round(Number(t))),
     fs = t => _s(255 * t),
-    xs = t => ws(1, t / 255),
-    ws = (t, e) => Math.max(0, Math.min(t, e)),
-    Es = t => void 0 === t ? 1 : ("string" == typeof t && t.indexOf("%") > 0 && (t = Number(t.split("%")[0]) / 100), t = Number(Number(t).toFixed(3)), isNaN(t) ? 1 : ws(1, t)),
+    ws = t => xs(1, t / 255),
+    xs = (t, e) => Math.max(0, Math.min(t, e)),
+    Es = t => void 0 === t ? 1 : ("string" == typeof t && t.indexOf("%") > 0 && (t = Number(t.split("%")[0]) / 100), t = Number(Number(t).toFixed(3)), isNaN(t) ? 1 : xs(1, t)),
     Ss = {
       aliceblue: "#F0F8FF",
       antiquewhite: "#FAEBD7",
@@ -6610,9 +6610,9 @@
       return t[3] = fs(t[3]), `#${t.map(t => t.toString(16).padStart(2, "0")).join("")}`.toUpperCase();
     }
     get hsv() {
-      const t = xs(this.r),
-        e = xs(this.g),
-        i = xs(this.b),
+      const t = ws(this.r),
+        e = ws(this.g),
+        i = ws(this.b),
         r = Math.min(t, e, i),
         n = Math.max(t, e, i);
       let s;
@@ -6628,9 +6628,9 @@
       };
     }
     get hsl() {
-      const t = xs(this.r),
-        e = xs(this.g),
-        i = xs(this.b),
+      const t = ws(this.r),
+        e = ws(this.g),
+        i = ws(this.b),
         r = Math.max(t, e, i),
         n = Math.min(t, e, i);
       let s, o;
@@ -6729,13 +6729,13 @@
           a = Math.round(o * e);
         return s ? t - a : a + t;
       });
-      return n[3] = xs(n[3]), $s.fromArray(n);
+      return n[3] = ws(n[3]), $s.fromArray(n);
     }
     adjustSatLum(t, e, i) {
       const r = this.hsl;
       let n = r[t],
         s = (i ? n : 100 - n) * e;
-      return r[t] = ws(100, i ? n - s : n + s), r.a = this.a, new $s(r);
+      return r[t] = xs(100, i ? n - s : n + s), r.a = this.a, new $s(r);
     }
     lighten(t, e = !1) {
       return this.adjustSatLum("l", t, e);
@@ -7680,7 +7680,7 @@
       this.x = t;
     }
   }
-  class zs {
+  class Rs {
     constructor(t = -1 / 0, e = 1 / 0) {
       this.min = t, this.max = e, this.attr = "";
     }
@@ -7691,18 +7691,18 @@
       return this.min === -1 / 0 && this.max === 1 / 0;
     }
     static fromString(t = null, e = 0) {
-      if (!t) return new zs();
-      if ("null" === t) return new zs(0, 0);
+      if (!t) return new Rs();
+      if ("null" === t) return new Rs(0, 0);
       const [i, r] = t.split(",").map(t => Number(t.trim()) + e),
-        n = new zs(i, r);
+        n = new Rs(i, r);
       return n.attr = t, n;
     }
   }
-  class Rs extends ut {
+  class zs extends ut {
     _target;
     _targetSelector = null;
-    _boundsX = new zs();
-    _boundsY = new zs();
+    _boundsX = new Rs();
+    _boundsY = new Rs();
     isMoving = !1;
     moveState = {};
     _vertical = null;
@@ -7766,13 +7766,13 @@
       return this._boundsX;
     }
     set boundsX(t) {
-      this._boundsX = zs.fromString(t, Os(this.target?.style.left ?? 0)), this.bounds.left = this._boundsX;
+      this._boundsX = Rs.fromString(t, Os(this.target?.style.left ?? 0)), this.bounds.left = this._boundsX;
     }
     get boundsY() {
       return this._boundsY;
     }
     set boundsY(t) {
-      this._boundsY = zs.fromString(t, Os(this.target?.style.top ?? 0)), this.bounds.top = this._boundsY;
+      this._boundsY = Rs.fromString(t, Os(this.target?.style.top ?? 0)), this.bounds.top = this._boundsY;
     }
     static properties = {
       posLeft: {
@@ -7937,7 +7937,7 @@
       return q`<slot></slot>`;
     }
   }
-  window.customElements.get("lit-movable") || window.customElements.define("lit-movable", Rs);
+  window.customElements.get("lit-movable") || window.customElements.define("lit-movable", zs);
   class js extends ut {
     static properties = {
       color: {
@@ -8207,7 +8207,7 @@
     }
   }
   window.customElements.get("color-picker") || window.customElements.define("color-picker", js);
-  const Gs = "anycubic_cloud",
+  const Gs = "anycubic_ha_integration",
     Vs = {
       keyframeOptions: {
         duration: 250,
@@ -8396,7 +8396,7 @@
     `;
     }
   };
-  n([xt("color-picker")], Ys.prototype, "_elColorPicker", void 0), n([yt()], Ys.prototype, "hass", void 0), n([yt()], Ys.prototype, "language", void 0), n([yt({
+  n([wt("color-picker")], Ys.prototype, "_elColorPicker", void 0), n([yt()], Ys.prototype, "hass", void 0), n([yt()], Ys.prototype, "language", void 0), n([yt({
     attribute: "selected-printer-device"
   })], Ys.prototype, "selectedPrinterDevice", void 0), n([yt({
     attribute: "slot-colors"
@@ -9328,7 +9328,7 @@
     `;
     }
   };
-  n([xt(".ac-printer-card")], Zs.prototype, "_printerCardContainer", void 0), n([yt()], Zs.prototype, "hass", void 0), n([yt()], Zs.prototype, "language", void 0), n([yt({
+  n([wt(".ac-printer-card")], Zs.prototype, "_printerCardContainer", void 0), n([yt()], Zs.prototype, "hass", void 0), n([yt()], Zs.prototype, "language", void 0), n([yt({
     attribute: "monitored-stats"
   })], Zs.prototype, "monitoredStats", void 0), n([yt({
     attribute: "selected-printer-id"
@@ -9499,7 +9499,7 @@
     attribute: "selected-printer-id"
   })], io.prototype, "selectedPrinterID", void 0), n([yt({
     attribute: "selected-printer-device"
-  })], io.prototype, "selectedPrinterDevice", void 0), n([_t()], io.prototype, "printerEntities", void 0), n([_t()], io.prototype, "printerEntityIdPart", void 0), n([_t()], io.prototype, "printerID", void 0), n([_t()], io.prototype, "printerMAC", void 0), n([_t()], io.prototype, "printerStateFwUpdateAvailable", void 0), n([_t()], io.prototype, "printerStateAvailable", void 0), n([_t()], io.prototype, "printerStateOnline", void 0), n([_t()], io.prototype, "printerStateCurrNozzleTemp", void 0), n([_t()], io.prototype, "printerStateCurrHotbedTemp", void 0), n([_t()], io.prototype, "printerStateTargetNozzleTemp", void 0), n([_t()], io.prototype, "printerStateTargetHotbedTemp", void 0), n([_t()], io.prototype, "jobStateProgress", void 0), n([_t()], io.prototype, "jobStatePrintState", void 0), n([_t()], io.prototype, "aceStateFwUpdateAvailable", void 0), n([_t()], io.prototype, "aceStateDryingActive", void 0), n([_t()], io.prototype, "aceStateDryingRemaining", void 0), n([_t()], io.prototype, "aceStateDryingTotal", void 0), n([_t()], io.prototype, "aceDryingProgress", void 0), n([_t()], io.prototype, "isFDM", void 0), n([_t()], io.prototype, "monitoredStats", void 0), n([_t()], io.prototype, "_statTranslations", void 0), io = n([bt("anycubic-view-main")], io);
+  })], io.prototype, "selectedPrinterDevice", void 0), n([_t()], io.prototype, "printerEntities", void 0), n([_t()], io.prototype, "printerEntityIdPart", void 0), n([_t()], io.prototype, "printerID", void 0), n([_t()], io.prototype, "printerMAC", void 0), n([_t()], io.prototype, "printerStateFwUpdateAvailable", void 0), n([_t()], io.prototype, "printerStateAvailable", void 0), n([_t()], io.prototype, "printerStateOnline", void 0), n([_t()], io.prototype, "printerStateCurrNozzleTemp", void 0), n([_t()], io.prototype, "printerStateCurrHotbedTemp", void 0), n([_t()], io.prototype, "printerStateTargetNozzleTemp", void 0), n([_t()], io.prototype, "printerStateTargetHotbedTemp", void 0), n([_t()], io.prototype, "jobStateProgress", void 0), n([_t()], io.prototype, "jobStatePrintState", void 0), n([_t()], io.prototype, "aceStateFwUpdateAvailable", void 0), n([_t()], io.prototype, "aceStateDryingActive", void 0), n([_t()], io.prototype, "aceStateDryingRemaining", void 0), n([_t()], io.prototype, "aceStateDryingTotal", void 0), n([_t()], io.prototype, "aceDryingProgress", void 0), n([_t()], io.prototype, "isFDM", void 0), n([_t()], io.prototype, "monitoredStats", void 0), n([_t()], io.prototype, "_statTranslations", void 0), io = n([mt("anycubic-view-main")], io);
   const ro = p`
   :host {
     padding: 16px;
@@ -9549,6 +9549,15 @@
     max-width: calc(100% - 58px);
   }
 
+  .file-preview-thumb {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 6px;
+  }
+
   .file-info:hover {
     background-color: #ccc3;
     border-color: #ccc9;
@@ -9591,7 +9600,7 @@
 `;
   class no extends ut {
     constructor() {
-      super(...arguments), this._isRefreshing = !1, this._supportsMQTT = !1, this._httpResponse = !1, this.refreshList = () => {
+      super(...arguments), this._isRefreshing = !1, this._supportsMQTT = !1, this._httpResponse = !1, this.previewEnabled = !1, this._previewImages = new Map(), this._previewRequested = new Set(), this.refreshList = () => {
         this._listRefreshEntity && (this._isRefreshing = !0, this.hass.callService("button", "press", {
           entity_id: this._listRefreshEntity.entity_id
         }).then(() => {
@@ -9605,7 +9614,7 @@
       super.willUpdate(t), t.has("language") && (this._noMqttMessage = Jr("common.messages.mqtt_unsupported", this.language)), (t.has("hass") || t.has("selectedPrinterID")) && (this.printerEntities = Ke(this.hass, this.selectedPrinterID), this.printerEntityIdPart = ti(this.printerEntities), this._supportsMQTT = function (t, e, i) {
         const r = We(t, Je(e, i, "binary_sensor", "mqtt_connection_active"));
         return !!r && !!r.attributes.supports_mqtt_login;
-      }(this.hass, this.printerEntities, this.printerEntityIdPart));
+      }(this.hass, this.printerEntities, this.printerEntityIdPart)), t.has("selectedPrinterID") && (this._previewImages = new Map(), this._previewRequested.clear());
     }
     render() {
       return q`
@@ -9625,6 +9634,7 @@
         <ul class="files-container">
         ${this._fileArray ? this._fileArray.map(t => q`
                   <li class="file-info">
+                    ${this._renderPreview(t)}
                     <div class="file-name">${t.name}</div>
                     <button
                       class="file-delete-button"
@@ -9642,6 +9652,24 @@
       </div>
     `;
     }
+    _renderPreview(t) {
+      if (!this.previewEnabled || !t.name) return Z;
+      if (!this._previewImages.has(t.name)) return this._fetchPreview(t.name), Z;
+      const e = this._previewImages.get(t.name);
+      return e ? q`<img class="file-preview-thumb" src=${e} alt="" />` : Z;
+    }
+    _fetchPreview(t) {
+      !this._previewRequested.has(t) && this.selectedPrinterDevice && (this._previewRequested.add(t), this.hass.callWS({
+        type: `${Gs}/file_preview`,
+        config_entry: this.selectedPrinterDevice.primary_config_entry,
+        device_id: this.selectedPrinterDevice.id,
+        filename: t
+      }).then(e => {
+        this._previewImages = new Map(this._previewImages).set(t, e.image);
+      }).catch(e => {
+        this._previewImages = new Map(this._previewImages).set(t, null);
+      }));
+    }
     static get styles() {
       return p`
       ${ro}
@@ -9655,7 +9683,7 @@
     attribute: "selected-printer-id"
   })], no.prototype, "selectedPrinterID", void 0), n([yt({
     attribute: "selected-printer-device"
-  })], no.prototype, "selectedPrinterDevice", void 0), n([_t()], no.prototype, "printerEntities", void 0), n([_t()], no.prototype, "printerEntityIdPart", void 0), n([_t()], no.prototype, "_fileArray", void 0), n([_t()], no.prototype, "_listRefreshEntity", void 0), n([_t()], no.prototype, "_isRefreshing", void 0), n([_t()], no.prototype, "_isDeleting", void 0), n([_t()], no.prototype, "_noMqttMessage", void 0), n([_t()], no.prototype, "_supportsMQTT", void 0), n([_t()], no.prototype, "_httpResponse", void 0);
+  })], no.prototype, "selectedPrinterDevice", void 0), n([_t()], no.prototype, "printerEntities", void 0), n([_t()], no.prototype, "printerEntityIdPart", void 0), n([_t()], no.prototype, "_fileArray", void 0), n([_t()], no.prototype, "_listRefreshEntity", void 0), n([_t()], no.prototype, "_isRefreshing", void 0), n([_t()], no.prototype, "_isDeleting", void 0), n([_t()], no.prototype, "_noMqttMessage", void 0), n([_t()], no.prototype, "_supportsMQTT", void 0), n([_t()], no.prototype, "_httpResponse", void 0), n([_t()], no.prototype, "_previewImages", void 0);
   let so = class extends no {
     constructor() {
       super(...arguments), this._httpResponse = !0, this.deleteFile = t => {
@@ -9680,10 +9708,10 @@
       }
     }
   };
-  n([_t()], so.prototype, "_fileArray", void 0), n([_t()], so.prototype, "_httpResponse", void 0), so = n([bt("anycubic-view-files_cloud")], so);
+  n([_t()], so.prototype, "_fileArray", void 0), n([_t()], so.prototype, "_httpResponse", void 0), so = n([mt("anycubic-view-files_cloud")], so);
   let oo = class extends no {
     constructor() {
-      super(...arguments), this.deleteFile = t => {
+      super(...arguments), this.previewEnabled = !0, this.deleteFile = t => {
         const e = t.currentTarget.file_info;
         this.selectedPrinterDevice && e.name && (this._isDeleting = !0, this.hass.callService(Gs, "delete_file_local", {
           config_entry: this.selectedPrinterDevice.primary_config_entry,
@@ -9705,10 +9733,10 @@
       }
     }
   };
-  oo = n([bt("anycubic-view-files_local")], oo);
+  oo = n([mt("anycubic-view-files_local")], oo);
   let ao = class extends no {
     constructor() {
-      super(...arguments), this.deleteFile = t => {
+      super(...arguments), this.previewEnabled = !0, this.deleteFile = t => {
         const e = t.currentTarget.file_info;
         this.selectedPrinterDevice && e.name && (this._isDeleting = !0, this.hass.callService(Gs, "delete_file_udisk", {
           config_entry: this.selectedPrinterDevice.primary_config_entry,
@@ -9730,7 +9758,7 @@
       }
     }
   };
-  ao = n([bt("anycubic-view-files_udisk")], ao);
+  ao = n([mt("anycubic-view-files_udisk")], ao);
   const lo = p`
   :host {
     padding: 16px;
@@ -9849,14 +9877,14 @@
       super(...arguments), this._serviceName = "print_and_upload_no_cloud_save";
     }
   };
-  n([_t()], po.prototype, "_serviceName", void 0), po = n([bt("anycubic-view-print-no_cloud_save")], po);
+  n([_t()], po.prototype, "_serviceName", void 0), po = n([mt("anycubic-view-print-no_cloud_save")], po);
   let uo = class extends co {
     constructor() {
       super(...arguments), this._serviceName = "print_and_upload_save_in_cloud";
     }
   };
-  n([_t()], uo.prototype, "_serviceName", void 0), uo = n([bt("anycubic-view-print-save_in_cloud")], uo);
-  var go = "0.0.77";
+  n([_t()], uo.prototype, "_serviceName", void 0), uo = n([mt("anycubic-view-print-save_in_cloud")], uo);
+  var go = "0.0.78";
   window.console.info(`%c ANYCUBIC-PANEL %c v${go} `, "color: orange; font-weight: bold; background: black", "color: white; font-weight: bold; background: dimgray"), t.AnycubicCloudPanel = class extends ut {
     constructor() {
       super(...arguments), this.selectedPage = "main", this._handleLocationChange = () => {
@@ -10167,7 +10195,7 @@
   }, n([yt()], t.AnycubicCloudPanel.prototype, "hass", void 0), n([yt({
     type: Boolean,
     reflect: !0
-  })], t.AnycubicCloudPanel.prototype, "narrow", void 0), n([yt()], t.AnycubicCloudPanel.prototype, "route", void 0), n([yt()], t.AnycubicCloudPanel.prototype, "panel", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "printers", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "selectedPage", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "selectedPrinterID", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "selectedPrinterDevice", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "language", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabMain", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabFilesLocal", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabFilesUdisk", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabFilesCloud", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabPrintNoSave", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabPrintSave", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabDebug", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_mainTitle", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_selectPrinter", void 0), t.AnycubicCloudPanel = n([bt("anycubic-cloud-panel")], t.AnycubicCloudPanel), Object.defineProperty(t, "__esModule", {
+  })], t.AnycubicCloudPanel.prototype, "narrow", void 0), n([yt()], t.AnycubicCloudPanel.prototype, "route", void 0), n([yt()], t.AnycubicCloudPanel.prototype, "panel", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "printers", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "selectedPage", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "selectedPrinterID", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "selectedPrinterDevice", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "language", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabMain", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabFilesLocal", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabFilesUdisk", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabFilesCloud", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabPrintNoSave", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabPrintSave", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_tabDebug", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_mainTitle", void 0), n([_t()], t.AnycubicCloudPanel.prototype, "_selectPrinter", void 0), t.AnycubicCloudPanel = n([mt("anycubic-cloud-panel")], t.AnycubicCloudPanel), Object.defineProperty(t, "__esModule", {
     value: !0
   });
 }({});

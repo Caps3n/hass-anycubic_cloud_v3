@@ -188,12 +188,16 @@ class AnycubicCloudServiceCall:
 
         return box_id
 
-    def _get_slot_num_list(self, service: ServiceCall) -> list[int] | None:
+    def _get_slot_num_list(
+        self,
+        service: ServiceCall,
+        printer: AnycubicPrinter,
+    ) -> list[int] | None:
         slot_idx_list = None
         slot_num_list = service.data.get(CONF_SLOT_NUMBER)
 
         if slot_num_list is not None:
-            slot_idx_list = list([x - 1 for x in slot_num_list])
+            slot_idx_list = printer.print_slot_numbers_to_indices(slot_num_list)
 
         return slot_idx_list
 
@@ -516,7 +520,7 @@ class PrintAndUploadSaveInCloud(BasePrintWithFile):
 
         file_name, gcode_bytes = await self._get_gcode_data(service)
         printer = self._get_printer(service)
-        slot_idx_list = self._get_slot_num_list(service)
+        slot_idx_list = self._get_slot_num_list(service, printer)
 
         print_response = await printer.print_and_upload_save_in_cloud(
             file_name=file_name,
@@ -540,7 +544,7 @@ class PrintAndUploadNoCloudSave(BasePrintWithFile):
 
         file_name, gcode_bytes = await self._get_gcode_data(service)
         printer = self._get_printer(service)
-        slot_idx_list = self._get_slot_num_list(service)
+        slot_idx_list = self._get_slot_num_list(service, printer)
 
         print_response = await printer.print_and_upload_no_cloud_save(
             file_name=file_name,
@@ -577,7 +581,7 @@ class PrintFileLocal(BasePrintExistingFile):
         printer = self._get_printer(service)
         file_name = service.data[CONF_FILENAME]
         file_path = service.data.get(CONF_FILEPATH, "")
-        slot_idx_list = self._get_slot_num_list(service)
+        slot_idx_list = self._get_slot_num_list(service, printer)
 
         if slot_idx_list is not None:
             LOGGER.warning(
@@ -603,7 +607,7 @@ class PrintFileUdisk(BasePrintExistingFile):
         printer = self._get_printer(service)
         file_name = service.data[CONF_FILENAME]
         file_path = service.data.get(CONF_FILEPATH, "")
-        slot_idx_list = self._get_slot_num_list(service)
+        slot_idx_list = self._get_slot_num_list(service, printer)
 
         if slot_idx_list is not None:
             LOGGER.warning(

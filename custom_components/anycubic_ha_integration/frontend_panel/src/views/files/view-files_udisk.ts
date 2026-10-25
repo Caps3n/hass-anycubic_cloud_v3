@@ -17,6 +17,8 @@ import {
 
 @customElement("anycubic-view-files_udisk")
 export class AnycubicViewFilesUdisk extends AnycubicViewFilesBase {
+  protected previewEnabled = true;
+
   protected willUpdate(changedProperties: PropertyValues<this>): void {
     super.willUpdate(changedProperties);
 

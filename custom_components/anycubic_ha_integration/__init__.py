@@ -14,10 +14,13 @@ from .const import (
 from .coordinator import AnycubicCloudDataUpdateCoordinator
 from .panel import async_register_panel, async_unregister_panel
 from .services import SERVICES
+from .websocket_api import async_register_websocket_api
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Anycubic Cloud from a config entry."""
+
+    async_register_websocket_api(hass)
 
     coordinator = AnycubicCloudDataUpdateCoordinator(hass, entry)
 

@@ -776,6 +776,15 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         except AnycubicAPIParsingError:
             raise
 
+        except KeyError as error:
+            # A missing field in the Cloud API response is a setup/parsing problem,
+            # not proof that the submitted credentials are invalid - don't send the
+            # user back to re-enter a token that already worked.
+            raise ConfigEntryError(
+                f"Unexpected response from Anycubic Cloud API (missing field: {error}). "
+                "This is not an authentication problem. Please file an issue."
+            ) from error
+
         except Exception as error:
             raise ConfigEntryAuthFailed(
                 f"Coordinator authentication failed with unknown Error. Check credentials {error}"
